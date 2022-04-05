@@ -160,20 +160,29 @@ class Heaplens(gdb.Command):
             self.log = log
 
         def stop(self):
-            reg = gdb.execute("heap chunks", to_string=True)
-            self.log['temp'].append(reg)
+            bins = gdb.execute("heap bins", to_string=True)
+            for bin in bins.splitlines():
+                # Example: Chunk(addr=0x56206612bd30, size=0x12d0, flags=PREV_INUSE)
+                # address length is 14
+                addr = "".join(re.findall(r'.*addr=(.{14})', bin))
+                if addr:
+                    self.log['bins'].append(addr)
             return True
 
     def invoke(self, arg, from_tty):
         print(f"Running heaplens: {arg}")
         args = arg.split(" ")
 
-        self.log = {'temp': [], }
+        self.log = {'bins': [], }
+
+        # Disable gef output
+        gdb.execute(f"gef config context.enable False")
 
         # 1st execution: Make it crash and add breakpoint
         # Code is loaded dynamically, the breakpoint in sudoers.c can be
         # retrieved only if we crash the program
-        crash_payload = "-s '\' $(python3 -c 'print(\"A\"*65535)')"
+        crash_payload = f"-s '\' $(python3 -c 'print(\"A\"*65535)')"
+
         # enable batch mode silently to suppress the vim process as inferior
         gdb.execute(f"r -batch-silent {crash_payload}")
         self.vul_bkps = []
@@ -183,24 +192,33 @@ class Heaplens(gdb.Command):
         print(DIVIDER)
         print("Set breakpoints for set_cmnd().")
 
-        test_payload = "-s '\' ABCDEFG"
-        gdb.execute(f"r {test_payload}")
+        # 2nd execution: Inspect.
+        gdb.execute(f"r {crash_payload}")
+
+        # gdb.execute("p NewArgv[0]")
+        # new1 = gdb.execute("p NewArgv[1]", to_string=True)
+        # gdb.execute("p NewArgv[2]")
+        # gdb.execute(f"x /20xg {new1.split(' ')[2]}")
 
         # print(DIVIDER)
         # print(self.log['temp'])
-        # print(DIVIDER)
-
-        self.cleanup(self.vul_bkps)
+        print(DIVIDER)
 
         try:
-
-            # with open(args[0], "w+") as f:
-            #     f.write("HEAPLENS")
+            with open(args[0], "w+") as f:
+                content = ""
+                content += "\n".join(self.log['bins'])
+                f.write(content)
+                print(content)
             print(f"Successfully write to {arg}")
 
         except FileNotFoundError:
             print("Usage: heaplens <output_file>")
-        print("TODO!")
+
+        self.cleanup(self.vul_bkps)
+
+        # Re-enable gef output
+        gdb.execute(f"gef config context.enable True")
 
     def cleanup(self, bkps):
         print("Removing breakpoints")
@@ -216,6 +234,7 @@ Heaplens()
 # cmds = [
 #     "file sudoedit",
 #     "list-env-in-heap -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+#     "heaplens test.txt",
 #     # "q",
 # ]
 # for cmd in cmds:
