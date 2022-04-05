@@ -4,10 +4,10 @@ CMPT733 Cybersecurity Lab II Project
 
 ::TODO::
 
-
 ## 📦 Environment
 
 Here is a list of things (and versions) we used to test the exploit. **They should already be installed in the VM.** In case anything is missing, follow the instruction below.
+
 ### `sudo`
 
 A binary of the vulnerable `sudo` with debugging enabled is required. A pre-built binary with debug symbols has been installed in the VM.
@@ -25,7 +25,7 @@ Sudoers I/O plugin version 1.8.31
 cyberlab@ubuntu:~$ sudoedit -s /
 sudoedit: /: not a regular file # sudo is vulnerable
 ```
-### Dependencies
+### Other Dependencies
 
 - Ubuntu 20.04.4 (64-bit)
 - `python` 3.8.10
@@ -36,8 +36,10 @@ sudoedit: /: not a regular file # sudo is vulnerable
   - If `gef` is not enabled under root, take a look at `/root/.gdbinit`
   - If the file is empty, just copy what you have in `~/.gdbinit`
 
-## 💡 How to Enable the Plugin
-### Option 1
+## 💡 Usage
+### How to Enable the Plugin
+
+#### Option 1
 Start gef
 ```
 gef➤ gef config gef.extra_plugins_dir <path to>/cmpt733-proj-sudo
@@ -46,14 +48,15 @@ gef➤ q
 ```
 
 This should update the file `~/.gef.rc` or `/root/.gef.rc` (under root).
-
-### Option 2
+#### Option 2
 Add this in `.gdbinit`:
 ```
 source <path to>/heaplens.py
 ```
 
+### Using the Plugin
+
 ## 🛠 Test Cases
 
-## 🚨 Known iIssues
+## 🚨 Known Issues
 
