@@ -17,7 +17,7 @@ set solib-search-path /lib/sudo
         LC_ALL
         TZ
         ...
-(gdb) heaptrace output.txt
+(gdb) heaplens output.txt
     Successfully write to output.txt
 (gdb)
 
@@ -145,22 +145,22 @@ class ListEnvInHeap(gdb.Command):
 ListEnvInHeap()
 
 
-class Heaptrace(gdb.Command):
+class Heaplens(gdb.Command):
 
     def __init__(self):
-        super().__init__("heaptrace", gdb.COMMAND_USER)
+        super().__init__("heaplens", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
-        print(f"Running heaptrace: {arg}")
+        print(f"Running heaplens: {arg}")
         args = arg.split(" ")
 
         with open(args[0], "w+") as f:
-            f.write("HEAPTRACE")
+            f.write("HEAPLENS")
         print("TODO!")
 
 
 # Instantiates the class (register the command)
-Heaptrace()
+Heaplens()
 
 
 # Debug: auto run command on gdb startup

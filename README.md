@@ -1,6 +1,5 @@
-# cmpt733-proj-sudo-vuln
-CVE-2021-3156
-
+# Heaplens
+CMPT733 Cybersecurity Lab II Project
 ## Repo Structure
 
 ::TODO::
@@ -36,6 +35,8 @@ Here is a list of things (and versions) we used to test the exploit. They should
 - `gcc` 9.4.0
 - `gdb` 9.2
 - `gef` 2022.01
+  - If `gef` is not enabled under root, take a look at `/root/.gdbinit`
+  - If the file is empty, just copy what you have in `~/.gdbinit`
 
 ## How to enable the plugin
 
@@ -47,10 +48,12 @@ gef➤ gef save
 gef➤ q
 ```
 
+This should update the file `~/.gef.rc` or `/root/.gef.rc` (under root).
+
 ### Option 2
 Add this in `.gdbinit`:
 ```
-source <path to>/heaptrace.py
+source <path to>/heaplens.py
 ```
 
 
