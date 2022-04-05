@@ -12,7 +12,7 @@ Here is a list of things (and versions) we used to test the exploit. **They shou
 
 A binary of the vulnerable `sudo` with debugging enabled is required. A pre-built binary with debug symbols has been installed in the VM.
 
-```
+```bash
 cyberlab@ubuntu:~$ which sudo
 /usr/local/bin/sudo
 

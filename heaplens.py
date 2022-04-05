@@ -23,6 +23,8 @@ set solib-search-path /lib/sudo
 
 """
 
+DIVIDER = "-" * 100
+
 
 class HelloWorld(gdb.Command):
     """Greet the whole world."""
@@ -108,10 +110,10 @@ class ListEnvInHeap(gdb.Command):
 
         # Run and print result
         gdb.execute(f"r {arg}")
-        print("-" * 100)
+        print(DIVIDER)
         print("1st execution. Found following envirnoment varible:")
         print(self.log['env'])
-        print("-" * 100)
+        print(DIVIDER)
         self.cleanup(self.getenv_bkps)
 
         # 2nd execution: Filter envirnoment variables appears in heap
@@ -126,10 +128,10 @@ class ListEnvInHeap(gdb.Command):
 
         # Run and print result
         gdb.execute(f"r {arg}")
-        print("-" * 100)
+        print(DIVIDER)
         print("2nd execution. Possible envirnoment variables for heap grooming:")
         print(list(set(self.log['fuzzable'])))
-        print("-" * 100)
+        print(DIVIDER)
         self.cleanup(self.free_bkps)
 
         # Re-enable gef output
@@ -150,13 +152,64 @@ class Heaplens(gdb.Command):
     def __init__(self):
         super().__init__("heaplens", gdb.COMMAND_USER)
 
+    class GetSetCmndBreakpoint(gdb.Breakpoint):
+        """TODO: add description"""
+
+        def __init__(self, name, log, *args, **kwargs):
+            super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
+            self.log = log
+
+        def stop(self):
+            reg = gdb.execute("info r", to_string=True)
+            self.log['temp'].append(reg)
+            return True
+
     def invoke(self, arg, from_tty):
         print(f"Running heaplens: {arg}")
         args = arg.split(" ")
 
-        with open(args[0], "w+") as f:
-            f.write("HEAPLENS")
+        # Set follow mode and kill inferior (TODO)
+        # gdb.execute(f"set follow-fork-mode child")
+        # gdb.execute(f"set detach-on-fork off")
+        gdb.execute(f"info inferior")
+
+        self.log = {'temp': [], }
+
+        # 1st execution: Make it crash and add breakpoint
+        # Code is loaded dynamically, the breakpoint in sudoers.c can be
+        # retrieved only if we crash the program
+        crash_payload = "-s '\' $(python3 -c 'print(\"A\"*65535)')"
+        gdb.execute(f"r {crash_payload}")
+        self.vul_bkps = []
+        self.vul_bkps.append(
+            self.GetSetCmndBreakpoint(name="set_cmnd", log=self.log))
+
+        print(DIVIDER)
+        print("Set breakpoints for set_cmnd().")
+
+        test_payload = "-s '\' ABCDEFG"
+        gdb.execute(f"r {test_payload}")
+
+        print(DIVIDER)
+        print(self.log['temp'])
+        print(DIVIDER)
+
+        self.cleanup(self.vul_bkps)
+
+        try:
+
+            # with open(args[0], "w+") as f:
+            #     f.write("HEAPLENS")
+            print(f"Successfully write to {arg}")
+
+        except FileNotFoundError:
+            print("Usage: heaplens <output_file>")
         print("TODO!")
+
+    def cleanup(self, bkps):
+        print("Removing breakpoints")
+        for bp in bkps:
+            bp.delete()
 
 
 # Instantiates the class (register the command)
