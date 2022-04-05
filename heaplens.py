@@ -160,7 +160,7 @@ class Heaplens(gdb.Command):
             self.log = log
 
         def stop(self):
-            reg = gdb.execute("info r", to_string=True)
+            reg = gdb.execute("heap chunks", to_string=True)
             self.log['temp'].append(reg)
             return True
 
@@ -168,18 +168,14 @@ class Heaplens(gdb.Command):
         print(f"Running heaplens: {arg}")
         args = arg.split(" ")
 
-        # Set follow mode and kill inferior (TODO)
-        # gdb.execute(f"set follow-fork-mode child")
-        # gdb.execute(f"set detach-on-fork off")
-        gdb.execute(f"info inferior")
-
         self.log = {'temp': [], }
 
         # 1st execution: Make it crash and add breakpoint
         # Code is loaded dynamically, the breakpoint in sudoers.c can be
         # retrieved only if we crash the program
         crash_payload = "-s '\' $(python3 -c 'print(\"A\"*65535)')"
-        gdb.execute(f"r {crash_payload}")
+        # enable batch mode silently to suppress the vim process as inferior
+        gdb.execute(f"r -batch-silent {crash_payload}")
         self.vul_bkps = []
         self.vul_bkps.append(
             self.GetSetCmndBreakpoint(name="set_cmnd", log=self.log))
@@ -190,9 +186,9 @@ class Heaplens(gdb.Command):
         test_payload = "-s '\' ABCDEFG"
         gdb.execute(f"r {test_payload}")
 
-        print(DIVIDER)
-        print(self.log['temp'])
-        print(DIVIDER)
+        # print(DIVIDER)
+        # print(self.log['temp'])
+        # print(DIVIDER)
 
         self.cleanup(self.vul_bkps)
 
