@@ -44,10 +44,12 @@ HelloWorld()
 #     return bytes.fromhex(hex(int(n))[2:]).decode("ASCII")[::-1]
 
 class ListEnvInHeap(gdb.Command):
+    """List envirnoment variables that might affect the heap layout."""
     def __init__ (self):
         super(ListEnvInHeap, self).__init__ ("list-env-in-heap", gdb.COMMAND_USER)
     
     class GetEnvBreakpoint(gdb.Breakpoint):
+        """Log envirnoment variable name at breakpoint."""
         def __init__(self, name, log, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
             # self.silent = False
@@ -65,6 +67,7 @@ class ListEnvInHeap(gdb.Command):
             return False
 
     class FreeBreakpoint(gdb.Breakpoint):
+        """Log envirnoment variable that contains 'FuzzMe{number}' at breakpoint."""
         def __init__(self, name, log, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
             # self.silent = False
@@ -74,8 +77,6 @@ class ListEnvInHeap(gdb.Command):
             # arg = gdb.selected_frame().read_register("$rdi")
             # arg = gef.arch.register("$rdi")
             env = gdb.execute("x/s $rdi", to_string=True)
-            if 'LC_CTYPE' in env:
-                print(env)
             match = re.search(r'".+"', env)
             if match:
                 value = match.group(0)[1:-1]
@@ -88,17 +89,24 @@ class ListEnvInHeap(gdb.Command):
             return False
         
     def invoke (self, arg, from_tty):
+        # Disable gef output
+        gdb.execute(f"gef config context.enable False", to_string=True)
+
         self.log = {'env': [], 'fuzzable': [], 'env_value': {}}
 
         # 1st execution: Get envirnoment variables used
         self.getenv_bkps = []
         self.getenv_bkps.append(self.GetEnvBreakpoint(name="getenv", log=self.log))
+
+        # Run and print result
         gdb.execute(f"r {arg}")
+        print("-"*100)
         print("1st execution. Found following envirnoment varible:")
         print(self.log['env'])
+        print("-"*100)
         self.cleanup(self.getenv_bkps)
 
-        # 2nd execution:
+        # 2nd execution: Filter envirnoment variables appears in heap
         # set all env variable to recongizeable string
         for i, var_name in enumerate(self.log['env']):
             gdb.execute(f"set environment {var_name} FuzzMe{i}")
@@ -107,10 +115,17 @@ class ListEnvInHeap(gdb.Command):
 
         self.free_bkps = []
         self.free_bkps.append(self.FreeBreakpoint(name="free", log=self.log))
+        
+        # Run and print result
         gdb.execute(f"r {arg}")
+        print("-"*100)
         print("2rd execution. Possible envirnoment variables for heap grooming:")
         print(list(set(self.log['fuzzable'])))
+        print("-"*100)
         self.cleanup(self.free_bkps)
+
+        # Re-enable gef output
+        gdb.execute(f"gef config context.enable True", to_string=True)
 
     def cleanup(self, bkps):
         print("Removing breakpoints")
