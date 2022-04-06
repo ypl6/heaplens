@@ -163,8 +163,7 @@ class ListEnvInHeap(gdb.Command):
 # Instantiates the class (register the command)
 ListEnvInHeap()
 
-__heaplens_log__ = {}
-# 'bins': [], 'chunks': []
+__heaplens_log__ = {'bins': [], 'chunks': []}
 
 
 class Heaplens(gdb.Command):
@@ -306,8 +305,11 @@ class HeaplensClear(gdb.Command):
         answer = ""
         while answer not in ["Y", "N"]:
             answer = input("Clear heaplens log [Y/N]? ").upper()
-        if answer == "y":
-            __heaplens_log__ = {}
+        if answer == "Y":
+            __heaplens_log__ = {'bins': [], 'chunks': []}
+            print('bye')
+            print(__heaplens_log__)
+        print("FIXME")
 
 
 # Instantiates the class (register the command)
@@ -322,7 +324,10 @@ class HeaplensAddr(gdb.Command):
 
     def invoke(self, arg, from_tty):
         print("Showing logged addresses of free chunks:")
-        print("\n".join(__heaplens_log__['bins']))
+        try:
+            print("\n".join(__heaplens_log__['bins']))
+        except KeyError:
+            print("Nothing to print")
 
 
 # Instantiates the class (register the command)
@@ -348,6 +353,8 @@ class HeaplensWrite(gdb.Command):
 
         except FileNotFoundError:
             print("Usage: heaplens-write <output_file>")
+        except KeyError:
+            print("Nothing to print")
     print("TODO! Should print backtrace")
 
 
