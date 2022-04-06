@@ -186,16 +186,15 @@ class Heaplens(gdb.Command):
             return True
 
     def invoke(self, arg, from_tty):
-        print(f"Running heaplens: {arg}")
-        args = arg.split(" ")
+        print("Initializing heaplens")
 
         # Disable gef output
-        gdb.execute(f"gef config context.enable False")
+        gdb.execute("gef config context.enable False")
 
         # 1st execution: Make it crash and add breakpoint
         # Code is loaded dynamically, the breakpoint in sudoers.c can be
         # retrieved only if we crash the program
-        crash_payload = f"-s '\\' $(python3 -c 'print(\"A\"*65535)')"
+        crash_payload = "-s '\\' $(python3 -c 'print(\"A\"*65535)')"
 
         # enable batch mode silently to suppress the vim process as inferior
         gdb.execute(f"r {crash_payload}")
@@ -204,7 +203,7 @@ class Heaplens(gdb.Command):
             self.GetSetCmndBreakpoint(name="set_cmnd", log=__heaplens_log__))
 
         print(DIVIDER)
-        print("Set breakpoints for set_cmnd().")
+        print("Set breakpoints for set_cmnd()")
 
         # 2nd execution: Inspect.
         gdb.execute(f"r {crash_payload}")
@@ -215,22 +214,13 @@ class Heaplens(gdb.Command):
         # gdb.execute(f"x /20xg {new1.split(' ')[2]}")
 
         print(DIVIDER)
-
-        try:
-            with open(args[0], "w+") as f:
-                content = ""
-                content += "\n".join(__heaplens_log__['chunks'])
-                f.write(escape_ansi(content))
-                print(content)
-            print(f"Successfully write to {arg}")
-
-        except FileNotFoundError:
-            print("Usage: heaplens <output_file>")
+        print("Collected chunk information")
+        # print("\n".join(__heaplens_log__['chunks']))
 
         self.cleanup(self.vul_bkps)
 
         # Re-enable gef output
-        gdb.execute(f"gef config context.enable True")
+        gdb.execute("gef config context.enable True")
 
     def cleanup(self, bkps):
         print("Removing breakpoints")
@@ -249,12 +239,37 @@ class HeaplensLog(gdb.Command):
         super().__init__("heaplens-log", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
-        print(f"Showing logged addresses of free chunks:")
+        print("Showing logged addresses of free chunks:")
         print("\n".join(__heaplens_log__['bins']))
 
 
 # Instantiates the class (register the command)
 HeaplensLog()
+
+
+class HeaplensWrite(gdb.Command):
+    global __heaplens_log__
+
+    def __init__(self):
+        super().__init__("heaplens-write", gdb.COMMAND_USER)
+
+    def invoke(self, arg, from_tty):
+        print(f"Writing heap trace: {arg}")
+        args = arg.split(" ")
+
+        try:
+            with open(args[0], "w+") as f:
+                content = ""
+                content += "\n".join(__heaplens_log__['chunks'])
+                f.write(escape_ansi(content))
+            print(f"Successfully write to {arg}")
+
+        except FileNotFoundError:
+            print("Usage: heaplens-write <output_file>")
+
+
+# Instantiates the class (register the command)
+HeaplensWrite()
 
 # Debug: auto run command on gdb startup
 # cmds = [
