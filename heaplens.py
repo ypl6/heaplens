@@ -126,6 +126,8 @@ class ListEnvInHeap(gdb.Command):
                                 help="envirnoment variable value prefix")
             parser.add_argument("--suffix", type=str,
                                 help="envirnoment variable value suffix")
+            parser.add_argument("-b", "--breakpoint", type=str,
+                                help="stop the executions here (execute br {breakpoint} in gdb)")
             parser.add_argument("-s", "--skip", type=str,
                                 help="skip this envirnoment variable")
             print(args.split(" "))
@@ -174,6 +176,8 @@ class ListEnvInHeap(gdb.Command):
 
         self.free_bkps = []
         self.free_bkps.append(self.FreeBreakpoint(name="free", log=self.log, cmd_args=args))
+        if args and args.breakpoint:
+            gdb.execute(f"br {args.breakpoint}")
 
         # Run and print result
         gdb.execute(f"r {call_args}")
@@ -396,7 +400,7 @@ HeaplensWrite()
 # Debug: auto run command on gdb startup
 cmds = [
     "file sudoedit",
-    "list-env-in-heap -s LC_ALL -v --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "list-env-in-heap -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
     # "heaplens test.txt",
     # "q",
 ]
