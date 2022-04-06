@@ -397,6 +397,49 @@ class HeaplensWrite(gdb.Command):
 # Instantiates the class (register the command)
 HeaplensWrite()
 
+
+class HeaplensDump(gdb.Command):
+    global __heaplens_log__
+    
+    def __init__(self):
+    	super().__init__("heaplens-dump", gdb.COMMAND_USER)
+    
+    def invoke(self, arg, from_tty):
+    	args = arg.split(" ")
+    	
+    	if len(args) == 0:
+    	    print("Usage: heaplens [print] [out outputfilepath]")
+    	    return
+    	
+    	elif len(args) > 2:
+    	    print("Too many arguments")
+    	    return
+    	    
+    	if args[0] == "print":
+    	    print(DIVIDER)
+    	    print("Dumping log...")
+    	    
+    	    # TODO complete the variable here
+    	    for i, (j, k) in enumerate({}):
+    	    	print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
+    	    	print("Printing trace:\n", {})
+    	    
+    	    return
+    	    
+    	elif args[0] == "out":
+    	    with open(args[2], "w") as fo:
+    	    # TODO complete proper var
+    	    	fo.write(json.dumps({}))
+    	    	
+    	else:
+    	    print("Invalid arguments")
+    	    return 	    
+
+
+# Instantiates the class (register the command)
+HeaplensDump()
+
+
 # Debug: auto run command on gdb startup
 cmds = [
     "file sudoedit",
