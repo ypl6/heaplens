@@ -6,6 +6,11 @@ import binascii
 import re
 import argparse
 import json
+import sys
+import os
+sys.path.append(os.getcwd())
+
+from utils import *
 
 """
 Goal(?)
@@ -38,11 +43,6 @@ heaplens-addr
 """
 
 DIVIDER = "-" * 100
-
-
-def escape_ansi(line):
-    ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
-    return ansi_escape.sub('', line)
 
 
 class HelloWorld(gdb.Command):
@@ -213,7 +213,6 @@ __heaplens_log__ = {'bins': [], 'chunks': []}
 
 
 class Heaplens(gdb.Command):
-    global __heaplens_log__
 
     def __init__(self):
         super().__init__("heaplens", gdb.COMMAND_USER)
@@ -239,6 +238,7 @@ class Heaplens(gdb.Command):
             return False
 
     def invoke(self, arg, from_tty):
+        global __heaplens_log__
         print("Initializing heaplens")
 
         # Disable gef output
@@ -271,8 +271,6 @@ Heaplens()
 
 
 class HeaplensCrashSudo(gdb.Command):
-    global __heaplens_log__
-
     def __init__(self):
         super().__init__("heaplens-crash-sudo", gdb.COMMAND_USER)
 
@@ -283,25 +281,11 @@ class HeaplensCrashSudo(gdb.Command):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
 
         def stop(self):
-            addr_re = r'.*addr=(.{14})'
-            bins = gdb.execute("heap bins", to_string=True)
-            for bin in bins.splitlines():
-                # Example: Chunk(addr=0x56206612bd30, size=0x12d0, flags=PREV_INUSE)
-                # address length is 14
-                addr = "".join(re.findall(addr_re, bin))
-                if addr:
-                    __heaplens_log__['bins'].append(addr)
-            chunks = gdb.execute("heap chunks", to_string=True)
-            for index, chunk in enumerate(chunks.splitlines()):
-                addr = "".join(re.findall(addr_re, chunk))
-                if addr in __heaplens_log__['bins']:
-                    __heaplens_log__['chunks'].append(
-                        chunk + "  ←  free chunk")
-                else:
-                    __heaplens_log__['chunks'].append(chunk)
+            record_updated_chunks()
             return True
 
     def invoke(self, arg, from_tty):
+        global __heaplens_log__
         print("Initializing heaplens for set_cmnd()")
 
         # Disable gef output
@@ -342,20 +326,17 @@ HeaplensCrashSudo()
 
 
 class HeaplensClear(gdb.Command):
-    global __heaplens_log__
-
     def __init__(self):
         super().__init__("heaplens-clear", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
+        global __heaplens_log__
         answer = ""
         while answer not in ["Y", "N"]:
             answer = input("Clear heaplens log [Y/N]? ").upper()
         if answer == "Y":
             __heaplens_log__ = {'bins': [], 'chunks': []}
-            print('bye')
-            print(__heaplens_log__)
-        print("FIXME")
+            print("Heaplens logs cleared")
 
 
 # Instantiates the class (register the command)
@@ -363,12 +344,11 @@ HeaplensClear()
 
 
 class HeaplensAddr(gdb.Command):
-    global __heaplens_log__
-
     def __init__(self):
         super().__init__("heaplens-addr", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
+        global __heaplens_log__
         print("Showing logged addresses of free chunks:")
         try:
             print("\n".join(__heaplens_log__['bins']))
@@ -381,12 +361,11 @@ HeaplensAddr()
 
 
 class HeaplensWrite(gdb.Command):
-    global __heaplens_log__
-
     def __init__(self):
         super().__init__("heaplens-write", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
+        global __heaplens_log__
         print(f"Writing chunk info: {arg}")
         args = arg.split(" ")
 
@@ -443,7 +422,35 @@ class HeaplensDump(gdb.Command):
     	    	
     	else:
     	    print("Invalid arguments")
-    	    return 	    
+        args = arg.split(" ")
+
+        if len(args) == 0:
+            print("Usage: heaplens [print] [out outputfilepath]")
+            return
+
+        elif len(args) > 2:
+            print("Too many arguments")
+            return
+
+        if args[0] == "print":
+            print(DIVIDER)
+            print("Dumping log...")
+
+            # TODO complete the variable here
+            for i, (j, k) in enumerate({}):
+                print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
+                print("Printing trace:\n", {})
+
+            return
+
+        elif args[0] == "out":
+            with open(args[2], "w") as fo:
+                # TODO complete proper var
+                fo.write(json.dumps({}))
+
+        else:
+            print("Invalid arguments")
+            return
 
 
 # Instantiates the class (register the command)
