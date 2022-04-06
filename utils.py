@@ -24,9 +24,7 @@ def backtrace():
     print("\n", DIVIDER)
 
 
-def record_updated_chunks():
-    global __heaplens_log__
-
+def record_updated_chunks(log):
     addr_re = r'.*addr=(.{14})'
     bins = gdb.execute("heap bins", to_string=True)
     for bin in bins.splitlines():
@@ -34,12 +32,12 @@ def record_updated_chunks():
         # address length is 14
         addr = "".join(re.findall(addr_re, bin))
         if addr:
-            __heaplens_log__['bins'].append(addr)
+            log['bins'].append(addr)
     chunks = gdb.execute("heap chunks", to_string=True)
     for chunk in chunks.splitlines():
         addr = "".join(re.findall(addr_re, chunk))
-        if addr in __heaplens_log__['bins']:
-            __heaplens_log__['chunks'].append(
+        if addr in log['bins']:
+            log['chunks'].append(
                 chunk + "  ←  free chunk")
         else:
-            __heaplens_log__['chunks'].append(chunk)
+            log['chunks'].append(chunk)

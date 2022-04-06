@@ -311,7 +311,8 @@ class HeaplensCrashSudo(gdb.Command):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
 
         def stop(self):
-            record_updated_chunks()
+            global __heaplens_log__
+            record_updated_chunks(__heaplens_log__)
             return True
 
     def invoke(self, arg, from_tty):
