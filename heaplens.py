@@ -26,6 +26,11 @@ set solib-search-path /lib/sudo
 DIVIDER = "-" * 100
 
 
+def escape_ansi(line):
+    ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
+    return ansi_escape.sub('', line)
+
+
 class HelloWorld(gdb.Command):
     """Greet the whole world."""
 
@@ -160,20 +165,28 @@ class Heaplens(gdb.Command):
             self.log = log
 
         def stop(self):
+            addr_re = r'.*addr=(.{14})'
             bins = gdb.execute("heap bins", to_string=True)
             for bin in bins.splitlines():
                 # Example: Chunk(addr=0x56206612bd30, size=0x12d0, flags=PREV_INUSE)
                 # address length is 14
-                addr = "".join(re.findall(r'.*addr=(.{14})', bin))
+                addr = "".join(re.findall(addr_re, bin))
                 if addr:
                     self.log['bins'].append(addr)
+            chunks = gdb.execute("heap chunks", to_string=True)
+            for index, chunk in enumerate(chunks.splitlines()):
+                addr = "".join(re.findall(addr_re, chunk))
+                if addr in self.log['bins']:
+                    self.log['chunks'].append(chunk + "  ←  free chunk")
+                else:
+                    self.log['chunks'].append(chunk)
             return True
 
     def invoke(self, arg, from_tty):
         print(f"Running heaplens: {arg}")
         args = arg.split(" ")
 
-        self.log = {'bins': [], }
+        self.log = {'bins': [], 'chunks': []}
 
         # Disable gef output
         gdb.execute(f"gef config context.enable False")
@@ -200,15 +213,13 @@ class Heaplens(gdb.Command):
         # gdb.execute("p NewArgv[2]")
         # gdb.execute(f"x /20xg {new1.split(' ')[2]}")
 
-        # print(DIVIDER)
-        # print(self.log['temp'])
         print(DIVIDER)
 
         try:
             with open(args[0], "w+") as f:
                 content = ""
-                content += "\n".join(self.log['bins'])
-                f.write(content)
+                content += "\n".join(self.log['chunks'])
+                f.write(escape_ansi(content))
                 print(content)
             print(f"Successfully write to {arg}")
 
