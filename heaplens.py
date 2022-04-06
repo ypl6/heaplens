@@ -46,26 +46,6 @@ heaplens-dump
 DIVIDER = "-" * 100
 
 
-def escape_ansi(line):
-    ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
-    return ansi_escape.sub('', line)
-
-# might be broken
-def stoi(s):
-    # this is a program intended for 64-bit machines so pointer sizes are 64 bits
-    r = int(s) & 0xffffffffffffffff
-    return r
-    
-    
-def read_register(register):
-    val = gdb.parse_and_eval("${}".format(register))
-    s_val = stoi(val)
-    return s_val
-
-
-def backtrace():
-    gdb.execute("bt 15")
-    print("\n", DIVIDER)
 
 
     
@@ -438,40 +418,39 @@ HeaplensWrite()
 
 
 class HeaplensDump(gdb.Command):
-    global __heaplens_log__
-    
     def __init__(self):
-    	super().__init__("heaplens-dump", gdb.COMMAND_USER)
-    
+        super().__init__("heaplens-dump", gdb.COMMAND_USER)
+
     def invoke(self, arg, from_tty):
-    	args = arg.split(" ")
-    	
-    	if len(args) == 0:
-    	    print("Usage: heaplens [print] [out outputfilepath]")
-    	    return
-    	
-    	elif len(args) > 2:
-    	    print("Too many arguments")
-    	    return
-    	    
-    	if args[0] == "print":
-    	    print(DIVIDER)
-    	    print("Dumping log...")
-    	    
-    	    # TODO complete the variable here
-    	    for i, (j, k) in enumerate({}):
-    	    	print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
-    	    	print("Printing trace:\n", {})
-    	    
-    	    return
-    	    
-    	elif args[0] == "out":
-    	    with open(args[2], "w") as fo:
-    	    # TODO complete proper var
-    	    	fo.write(json.dumps({}))
-    	    	
-    	else:
-    	    print("Invalid arguments")
+        global __heaplens_log__
+        args = arg.split(" ")
+        
+        if len(args) == 0:
+            print("Usage: heaplens [print] [out outputfilepath]")
+            return
+        
+        elif len(args) > 2:
+            print("Too many arguments")
+            return
+            
+        if args[0] == "print":
+            print(DIVIDER)
+            print("Dumping log...")
+            
+            # TODO complete the variable here
+            for i, (j, k) in enumerate({}):
+                print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
+                print("Printing trace:\n", {})
+            
+            return
+            
+        elif args[0] == "out":
+            with open(args[2], "w") as fo:
+            # TODO complete proper var
+                fo.write(json.dumps({}))
+                
+        else:
+            print("Invalid arguments")
         args = arg.split(" ")
 
         if len(args) == 0:

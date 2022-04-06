@@ -6,6 +6,23 @@ def escape_ansi(line):
     ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
     return ansi_escape.sub('', line)
 
+# might be broken
+def stoi(s):
+    # this is a program intended for 64-bit machines so pointer sizes are 64 bits
+    r = int(s) & 0xffffffffffffffff
+    return r
+
+
+def read_register(register):
+    val = gdb.parse_and_eval("${}".format(register))
+    s_val = stoi(val)
+    return s_val
+
+
+def backtrace():
+    gdb.execute("bt 15")
+    print("\n", DIVIDER)
+
 
 def record_updated_chunks():
     global __heaplens_log__
