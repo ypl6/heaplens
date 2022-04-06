@@ -20,7 +20,7 @@ set solib-search-path /lib/sudo
 (gdb) list-env-in-heap
     ...
     ...
-    Possible envirnoment variables to fuzz: 
+    Possible envirnoment variables to fuzz:
         LC_ALL
         TZ
         ...
@@ -46,9 +46,6 @@ heaplens-dump
 DIVIDER = "-" * 100
 
 
-
-
-    
 class HelloWorld(gdb.Command):
     """Greet the whole world."""
 
@@ -65,9 +62,11 @@ class HelloWorld(gdb.Command):
 # Instantiates the class (register the command)
 HelloWorld()
 
+
 class ReturnValFromBreakpoint(gdb.Breakpoint):
     def __init__(self, name, fname, alloc, heaplens_details):
-        super(ReturnValFromBreakpoint, self).__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
+        super(ReturnValFromBreakpoint, self).__init__(
+            name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
         self.fname = fname
         self.trigger = False
 
@@ -79,7 +78,8 @@ class ReturnValFromBreakpoint(gdb.Breakpoint):
         print(f"{self.fname} returns {hex(ret_address)}")
 
         self.heaplens_details[ret_address] = {}
-        self.heaplens_details[ret_address]['backtrace'] = gdb.execute("bt", to_string=True)
+        self.heaplens_details[ret_address]['backtrace'] = gdb.execute(
+            "bt", to_string=True)
         self.heaplens_details[ret_address]['size'] = self.alloc
 
         backtrace()
@@ -89,7 +89,7 @@ class ReturnValFromBreakpoint(gdb.Breakpoint):
 
     def executed(self):
         return self.trigger
-    	 
+
 
 # def int_to_string(n):
 #     """Convert int to string. (Not used, not debug-ed)"""
@@ -162,13 +162,13 @@ class ListEnvInHeap(gdb.Command):
 
         if not args:
             return None, None
-        elif ' -- ' in args: # both run args and args
+        elif ' -- ' in args:  # both run args and args
             args, run_args = args.split(' -- ')
             args = parser.parse_args(args.strip().split(" "))
             return run_args, args
-        elif args.startswith('-- '): # run args only
+        elif args.startswith('-- '):  # run args only
             return args[3:], None
-        else: # args only
+        else:  # args only
             args = parser.parse_args(args.strip().split(" "))
             return None, args
 
@@ -215,7 +215,8 @@ class ListEnvInHeap(gdb.Command):
         # print(self.log)
 
         self.free_bkps = []
-        self.free_bkps.append(self.FreeBreakpoint(name="free", log=self.log, cmd_args=args))
+        self.free_bkps.append(self.FreeBreakpoint(
+            name="free", log=self.log, cmd_args=args))
         if args and args.breakpoint:
             gdb.execute(f"br {args.breakpoint}")
 
@@ -243,6 +244,7 @@ __heaplens_log__ = {'bins': [], 'chunks': []}
 
 
 class Heaplens(gdb.Command):
+    """A generic command that works with custom binaries and breakpoints."""
 
     def __init__(self):
         super().__init__("heaplens", gdb.COMMAND_USER)
@@ -301,11 +303,13 @@ Heaplens()
 
 
 class HeaplensCrashSudo(gdb.Command):
+    """A command tailored to examine vulnerable sudo's set_cmnd()"""
+
     def __init__(self):
         super().__init__("heaplens-crash-sudo", gdb.COMMAND_USER)
 
     class GetSetCmndBreakpoint(gdb.Breakpoint):
-        """TODO: add description"""
+        """Print chunk info at the vulnerable set_cmnd() function"""
 
         def __init__(self, name, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
@@ -315,9 +319,31 @@ class HeaplensCrashSudo(gdb.Command):
             record_updated_chunks(__heaplens_log__)
             return True
 
+    def parse_args(self, args):
+        parser = argparse.ArgumentParser(
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        parser.add_argument("-s", "--string", type=str, default="A",
+                            help="the string to send as NewArgv[2]")
+        parser.add_argument("-r", "--repeat", type=int, default=65535,
+                            help="repeat the payload string for {repeat} times")
+
+        if args:
+            return parser.parse_args(args.strip().split(" "))
+        else:
+            return parser.parse_args([])
+
     def invoke(self, arg, from_tty):
+        # Parse arguments aake sure current file is sudoedit
+        try:
+            args = self.parse_args(arg)
+            gdb.execute("file sudoedit")
+        except gdb.error:
+            print(
+                "Warning: sudoedit is not found. This command is only for sudoedit.")
+            return
+
         global __heaplens_log__
-        print("Initializing heaplens for set_cmnd()")
+        print("Initializing heaplens for sudoedit")
 
         # Disable gef output
         gdb.execute("gef config context.enable False")
@@ -325,7 +351,7 @@ class HeaplensCrashSudo(gdb.Command):
         # 1st execution: Make it crash and add breakpoint
         # Code is loaded dynamically, the breakpoint in sudoers.c can be
         # retrieved only if we crash the program
-        crash_payload = "-s '\\' $(python3 -c 'print(\"A\"*65535)')"
+        crash_payload = f"-s '\\' $(python3 -c 'print(\"{args.string}\"*{args.repeat})')"
 
         # enable batch mode silently to suppress the vim process as inferior
         gdb.execute(f"r {crash_payload}")
@@ -425,31 +451,31 @@ class HeaplensDump(gdb.Command):
     def invoke(self, arg, from_tty):
         global __heaplens_log__
         args = arg.split(" ")
-        
+
         if len(args) == 0:
             print("Usage: heaplens [print] [out outputfilepath]")
             return
-        
+
         elif len(args) > 2:
             print("Too many arguments")
             return
-            
+
         if args[0] == "print":
             print(DIVIDER)
             print("Dumping log...")
-            
+
             # TODO complete the variable here
             for i, (j, k) in enumerate({}):
                 print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
                 print("Printing trace:\n", {})
-            
+
             return
-            
+
         elif args[0] == "out":
             with open(args[2], "w") as fo:
-            # TODO complete proper var
+                # TODO complete proper var
                 fo.write(json.dumps({}))
-                
+
         else:
             print("Invalid arguments")
         args = arg.split(" ")
