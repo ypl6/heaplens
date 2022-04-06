@@ -34,6 +34,7 @@ heaplens-crash-sudo
 heaplens-clear
 heaplens-write
 heaplens-addr
+heaplens-dump
 
 """
 
@@ -43,6 +44,24 @@ DIVIDER = "-" * 100
 def escape_ansi(line):
     ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
     return ansi_escape.sub('', line)
+    
+
+# might be broken
+def stoi(s):
+    # this is a program intended for 64-bit machines
+    r = int(s) & 0xffffffffffffffff
+    return r
+    
+    
+def read_register(register):
+    val = gdb.parse_and_eval("${}".format(register))
+    s_val = stoi(val)
+    return s_val
+
+
+def backtrace():
+    gdb.execute("bt 15")
+    print("\n", DIVIDER)
 
 
 class HelloWorld(gdb.Command):
@@ -60,6 +79,32 @@ class HelloWorld(gdb.Command):
 
 # Instantiates the class (register the command)
 HelloWorld()
+
+class ReturnValFromBreakpoint(gdb.Breakpoint):
+    def __init__(self, name, fname, alloc, heaplens_details):
+        super(ReturnValFromBreakpoint, self).__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
+        self.fname = fname
+        self.trigger = False
+
+        self.heap_trace_info = heap_trace_info
+        self.alloc_size = alloc_size
+
+    def stop(self):
+        ret_address = read_register("rax")
+        print(f"{self.fname} returns {hex(ret_address)}")
+
+        self.heaplens_details[ret_address] = {}
+        self.heaplens_details[ret_address]['backtrace'] = gdb.execute("bt", to_string=True)
+        self.heaplens_details[ret_address]['size'] = self.alloc
+
+        backtrace()
+
+        self.trigger = True
+        return False
+
+    def executed(self):
+        return self.trigger
+    	 
 
 # def int_to_string(n):
 #     """Convert int to string. (Not used, not debug-ed)"""
