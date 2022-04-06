@@ -151,8 +151,11 @@ class ListEnvInHeap(gdb.Command):
 # Instantiates the class (register the command)
 ListEnvInHeap()
 
+__heaplens_log__ = {'bins': [], 'chunks': []}
+
 
 class Heaplens(gdb.Command):
+    global __heaplens_log__
 
     def __init__(self):
         super().__init__("heaplens", gdb.COMMAND_USER)
@@ -160,9 +163,8 @@ class Heaplens(gdb.Command):
     class GetSetCmndBreakpoint(gdb.Breakpoint):
         """TODO: add description"""
 
-        def __init__(self, name, log, *args, **kwargs):
+        def __init__(self, name, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
-            self.log = log
 
         def stop(self):
             addr_re = r'.*addr=(.{14})'
@@ -172,21 +174,20 @@ class Heaplens(gdb.Command):
                 # address length is 14
                 addr = "".join(re.findall(addr_re, bin))
                 if addr:
-                    self.log['bins'].append(addr)
+                    __heaplens_log__['bins'].append(addr)
             chunks = gdb.execute("heap chunks", to_string=True)
             for index, chunk in enumerate(chunks.splitlines()):
                 addr = "".join(re.findall(addr_re, chunk))
-                if addr in self.log['bins']:
-                    self.log['chunks'].append(chunk + "  ←  free chunk")
+                if addr in __heaplens_log__['bins']:
+                    __heaplens_log__['chunks'].append(
+                        chunk + "  ←  free chunk")
                 else:
-                    self.log['chunks'].append(chunk)
+                    __heaplens_log__['chunks'].append(chunk)
             return True
 
     def invoke(self, arg, from_tty):
         print(f"Running heaplens: {arg}")
         args = arg.split(" ")
-
-        self.log = {'bins': [], 'chunks': []}
 
         # Disable gef output
         gdb.execute(f"gef config context.enable False")
@@ -200,7 +201,7 @@ class Heaplens(gdb.Command):
         gdb.execute(f"r {crash_payload}")
         self.vul_bkps = []
         self.vul_bkps.append(
-            self.GetSetCmndBreakpoint(name="set_cmnd", log=self.log))
+            self.GetSetCmndBreakpoint(name="set_cmnd", log=__heaplens_log__))
 
         print(DIVIDER)
         print("Set breakpoints for set_cmnd().")
@@ -218,7 +219,7 @@ class Heaplens(gdb.Command):
         try:
             with open(args[0], "w+") as f:
                 content = ""
-                content += "\n".join(self.log['chunks'])
+                content += "\n".join(__heaplens_log__['chunks'])
                 f.write(escape_ansi(content))
                 print(content)
             print(f"Successfully write to {arg}")
@@ -240,6 +241,20 @@ class Heaplens(gdb.Command):
 # Instantiates the class (register the command)
 Heaplens()
 
+
+class HeaplensLog(gdb.Command):
+    global __heaplens_log__
+
+    def __init__(self):
+        super().__init__("heaplens-log", gdb.COMMAND_USER)
+
+    def invoke(self, arg, from_tty):
+        print(f"Showing logged addresses of free chunks:")
+        print("\n".join(__heaplens_log__['bins']))
+
+
+# Instantiates the class (register the command)
+HeaplensLog()
 
 # Debug: auto run command on gdb startup
 # cmds = [
