@@ -181,10 +181,10 @@ class Heaplens(gdb.Command):
         # 1st execution: Make it crash and add breakpoint
         # Code is loaded dynamically, the breakpoint in sudoers.c can be
         # retrieved only if we crash the program
-        crash_payload = f"-s '\' $(python3 -c 'print(\"A\"*65535)')"
+        crash_payload = f"-s '\\' $(python3 -c 'print(\"A\"*65535)')"
 
         # enable batch mode silently to suppress the vim process as inferior
-        gdb.execute(f"r -batch-silent {crash_payload}")
+        gdb.execute(f"r {crash_payload}")
         self.vul_bkps = []
         self.vul_bkps.append(
             self.GetSetCmndBreakpoint(name="set_cmnd", log=self.log))
@@ -196,7 +196,7 @@ class Heaplens(gdb.Command):
         gdb.execute(f"r {crash_payload}")
 
         # gdb.execute("p NewArgv[0]")
-        # new1 = gdb.execute("p NewArgv[1]", to_string=True)
+        # gdb.execute("p NewArgv[1]")
         # gdb.execute("p NewArgv[2]")
         # gdb.execute(f"x /20xg {new1.split(' ')[2]}")
 
