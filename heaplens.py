@@ -4,6 +4,7 @@ from xml.dom.minidom import Identified
 import gdb
 import binascii
 import re
+import argparse
 
 """
 Goal(?)
@@ -82,10 +83,10 @@ class ListEnvInHeap(gdb.Command):
     class FreeBreakpoint(gdb.Breakpoint):
         """Log envirnoment variable that contains 'FuzzMe{number}' at breakpoint."""
 
-        def __init__(self, name, log, *args, **kwargs):
+        def __init__(self, name, log, cmd_args, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
-            # self.silent = False
             self.log = log
+            self.args = cmd_args
 
         def stop(self):
             # arg = gdb.selected_frame().read_register("$rdi")
@@ -96,13 +97,35 @@ class ListEnvInHeap(gdb.Command):
                 value = match.group(0)[1:-1]
 
                 if 'FuzzMe' in value:
-                    print(f"\tFound {value}")
+                    if self.args and self.args.verbose:
+                        print(f"\tFound {value}")
                     identifiers = re.findall(r'FuzzMe\d+', value)
                     for i in identifiers:
                         self.log['fuzzable'].append(self.log['env_value'][i])
             return False
 
+    def parse_args(self, args):
+        if ' -- ' in args:
+            args, call_args = args.split(' -- ')
+            parser = argparse.ArgumentParser()
+            parser.add_argument("-v", "--verbose", action="store_true",
+                                help="increase output verbosity")
+            parser.add_argument("--prefix", type=str,
+                                help="envirnoment variable value prefix")
+            parser.add_argument("--suffix", type=str,
+                                help="envirnoment variable value suffix")
+            parser.add_argument("-s", "--skip", type=str,
+                                help="skip this envirnoment variable")
+            print(args.split(" "))
+            args = parser.parse_args(args.strip().split(" "))
+            return call_args, args
+        else:
+            return args, None
+
     def invoke(self, arg, from_tty):
+        # Parse arguments
+        call_args, args = self.parse_args(arg)
+        
         # Disable gef output
         gdb.execute(f"gef config context.enable False", to_string=True)
 
@@ -114,7 +137,7 @@ class ListEnvInHeap(gdb.Command):
             self.GetEnvBreakpoint(name="getenv", log=self.log))
 
         # Run and print result
-        gdb.execute(f"r {arg}")
+        gdb.execute(f"r {call_args}")
         print(DIVIDER)
         print("1st execution. Found following envirnoment varible:")
         print(self.log['env'])
@@ -123,16 +146,25 @@ class ListEnvInHeap(gdb.Command):
 
         # 2nd execution: Filter envirnoment variables appears in heap
         # set all env variable to recongizeable string
+        skips = args.skip.split(",") if args and args.skip else []
+        print(f"Skipping envirnoment variable: {skips}")
         for i, var_name in enumerate(self.log['env']):
-            gdb.execute(f"set environment {var_name} FuzzMe{i}")
-            self.log['env_value'][f'FuzzMe{i}'] = var_name
+            if var_name in skips:
+                continue
+            value = f"FuzzMe{i}"
+            if args and args.prefix:
+                value = args.prefix + value
+            if args and args.suffix:
+                value += args.suffix
+            gdb.execute(f"set environment {var_name} {value}")
+            self.log['env_value'][f"FuzzMe{i}"] = var_name
         # print(self.log)
 
         self.free_bkps = []
-        self.free_bkps.append(self.FreeBreakpoint(name="free", log=self.log))
+        self.free_bkps.append(self.FreeBreakpoint(name="free", log=self.log, cmd_args=args))
 
         # Run and print result
-        gdb.execute(f"r {arg}")
+        gdb.execute(f"r {call_args}")
         print(DIVIDER)
         print("2nd execution. Possible envirnoment variables for heap grooming:")
         print(list(set(self.log['fuzzable'])))
@@ -274,11 +306,11 @@ class HeaplensWrite(gdb.Command):
 HeaplensWrite()
 
 # Debug: auto run command on gdb startup
-# cmds = [
-#     "file sudoedit",
-#     "list-env-in-heap -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
-#     "heaplens test.txt",
-#     # "q",
-# ]
-# for cmd in cmds:
-#     gdb.execute(cmd)
+cmds = [
+    "file sudoedit",
+    "list-env-in-heap -s LC_ALL -v --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    # "heaplens test.txt",
+    # "q",
+]
+for cmd in cmds:
+    gdb.execute(cmd)
