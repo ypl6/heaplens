@@ -163,29 +163,38 @@ class ListEnvInHeap(gdb.Command):
             return False
 
     def parse_args(self, args):
-        if ' -- ' in args:
-            args, call_args = args.split(' -- ')
-            parser = argparse.ArgumentParser()
-            parser.add_argument("-v", "--verbose", action="store_true",
-                                help="increase output verbosity")
-            parser.add_argument("--prefix", type=str,
-                                help="envirnoment variable value prefix")
-            parser.add_argument("--suffix", type=str,
-                                help="envirnoment variable value suffix")
-            parser.add_argument("-b", "--breakpoint", type=str,
-                                help="stop the executions here (execute br {breakpoint} in gdb)")
-            parser.add_argument("-s", "--skip", type=str,
-                                help="skip this envirnoment variable")
-            print(args.split(" "))
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-v", "--verbose", action="store_true",
+                            help="increase output verbosity")
+        parser.add_argument("--prefix", type=str,
+                            help="envirnoment variable value prefix")
+        parser.add_argument("--suffix", type=str,
+                            help="envirnoment variable value suffix")
+        parser.add_argument("-b", "--breakpoint", type=str,
+                            help="stop the executions here (execute br {breakpoint} in gdb)")
+        parser.add_argument("-s", "--skip", type=str,
+                            help="skip this envirnoment variable")
+
+        if not args:
+            return None, None
+        elif ' -- ' in args: # both run args and args
+            args, run_args = args.split(' -- ')
             args = parser.parse_args(args.strip().split(" "))
-            return call_args, args
-        else:
-            return args, None
+            return run_args, args
+        elif args.startswith('-- '): # run args only
+            return args[3:], None
+        else: # args only
+            args = parser.parse_args(args.strip().split(" "))
+            return None, args
 
     def invoke(self, arg, from_tty):
         # Parse arguments
-        call_args, args = self.parse_args(arg)
-        
+        run_args, args = self.parse_args(arg)
+        run_cmd = f"r {run_args}" if run_args else "r"
+        print(DIVIDER)
+        print(f" args: {args}\n run_args: {run_args}")
+        print(DIVIDER)
+
         # Disable gef output
         gdb.execute(f"gef config context.enable False", to_string=True)
 
@@ -197,7 +206,7 @@ class ListEnvInHeap(gdb.Command):
             self.GetEnvBreakpoint(name="getenv", log=self.log))
 
         # Run and print result
-        gdb.execute(f"r {call_args}")
+        gdb.execute(run_cmd)
         print(DIVIDER)
         print("1st execution. Found following envirnoment varible:")
         print(self.log['env'])
@@ -226,7 +235,7 @@ class ListEnvInHeap(gdb.Command):
             gdb.execute(f"br {args.breakpoint}")
 
         # Run and print result
-        gdb.execute(f"r {call_args}")
+        gdb.execute(run_cmd)
         print(DIVIDER)
         print("2nd execution. Possible envirnoment variables for heap grooming:")
         print(list(set(self.log['fuzzable'])))
@@ -489,7 +498,11 @@ HeaplensDump()
 # Debug: auto run command on gdb startup
 cmds = [
     "file sudoedit",
-    "list-env-in-heap -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    # "list-env-in-heap -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+
+    # "file tests/env-in-heap",
+    # "list-env-in-heap -b breakme",
+
     # "heaplens test.txt",
     # "q",
 ]
