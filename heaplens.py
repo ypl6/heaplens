@@ -198,13 +198,15 @@ class Heaplens(gdb.Command):
 
         # enable batch mode silently to suppress the vim process as inferior
         gdb.execute(f"r {crash_payload}")
+
+        print(DIVIDER)
+        print("Setting breakpoints for set_cmnd()")
         self.vul_bkps = []
         self.vul_bkps.append(
             self.GetSetCmndBreakpoint(name="set_cmnd", log=__heaplens_log__))
 
         print(DIVIDER)
-        print("Set breakpoints for set_cmnd()")
-
+        print("Collecting chunk information")
         # 2nd execution: Inspect.
         gdb.execute(f"r {crash_payload}")
 
@@ -213,8 +215,6 @@ class Heaplens(gdb.Command):
         # gdb.execute("p NewArgv[2]")
         # gdb.execute(f"x /20xg {new1.split(' ')[2]}")
 
-        print(DIVIDER)
-        print("Collected chunk information")
         # print("\n".join(__heaplens_log__['chunks']))
 
         self.cleanup(self.vul_bkps)
@@ -226,17 +226,18 @@ class Heaplens(gdb.Command):
         print("Removing breakpoints")
         for bp in bkps:
             bp.delete()
+    print("TODO! Should take care of (de)allocation for backtrace")
 
 
 # Instantiates the class (register the command)
 Heaplens()
 
 
-class HeaplensLog(gdb.Command):
+class HeaplensAddr(gdb.Command):
     global __heaplens_log__
 
     def __init__(self):
-        super().__init__("heaplens-log", gdb.COMMAND_USER)
+        super().__init__("heaplens-addr", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
         print("Showing logged addresses of free chunks:")
@@ -244,7 +245,7 @@ class HeaplensLog(gdb.Command):
 
 
 # Instantiates the class (register the command)
-HeaplensLog()
+HeaplensAddr()
 
 
 class HeaplensWrite(gdb.Command):
@@ -254,7 +255,7 @@ class HeaplensWrite(gdb.Command):
         super().__init__("heaplens-write", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
-        print(f"Writing heap trace: {arg}")
+        print(f"Writing chunk info: {arg}")
         args = arg.split(" ")
 
         try:
@@ -266,6 +267,7 @@ class HeaplensWrite(gdb.Command):
 
         except FileNotFoundError:
             print("Usage: heaplens-write <output_file>")
+    print("TODO! Should print backtrace")
 
 
 # Instantiates the class (register the command)
