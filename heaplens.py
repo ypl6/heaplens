@@ -24,6 +24,18 @@ set solib-search-path /lib/sudo
 
 """
 
+
+"""
+Commands
+list-env-in-heap
+heaplens
+heaplens-crash-sudo
+heaplens-clear
+heaplens-write
+heaplens-addr
+
+"""
+
 DIVIDER = "-" * 100
 
 
@@ -192,6 +204,64 @@ class Heaplens(gdb.Command):
     def __init__(self):
         super().__init__("heaplens", gdb.COMMAND_USER)
 
+    class GetAllocBreakpoint(gdb.Breakpoint):
+        """TODO: add description"""
+
+        def __init__(self, name, *args, **kwargs):
+            super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
+
+        def stop(self):
+            # TODO
+            return False
+
+    class GetFreeBreakpoint(gdb.Breakpoint):
+        """TODO: add description"""
+
+        def __init__(self, name, *args, **kwargs):
+            super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
+
+        def stop(self):
+            # TODO
+            return False
+
+    def invoke(self, arg, from_tty):
+        print("Initializing heaplens")
+
+        # Disable gef output
+        gdb.execute("gef config context.enable False")
+        gdb.execute("break main")
+        gdb.execute("r")
+
+        print(DIVIDER)
+        print("Setting breakpoints for set_cmnd()")
+        self.free_bkps = []
+        self.alloc_bkps = []
+
+        self.free_bkps.append(
+            self.GetFreeBreakpoint(name="free", log=__heaplens_log__))  # ?
+
+        # TODO: alloc series
+
+        # TODO: work on info
+        # First step is to print chunk info (without backtrace)
+
+    def cleanup(self, bkps):
+        print("Removing breakpoints")
+        for bp in bkps:
+            bp.delete()
+    print("TODO")
+
+
+# Instantiates the class (register the command)
+Heaplens()
+
+
+class HeaplensCrashSudo(gdb.Command):
+    global __heaplens_log__
+
+    def __init__(self):
+        super().__init__("heaplens-crash-sudo", gdb.COMMAND_USER)
+
     class GetSetCmndBreakpoint(gdb.Breakpoint):
         """TODO: add description"""
 
@@ -218,7 +288,7 @@ class Heaplens(gdb.Command):
             return True
 
     def invoke(self, arg, from_tty):
-        print("Initializing heaplens")
+        print("Initializing heaplens for set_cmnd()")
 
         # Disable gef output
         gdb.execute("gef config context.enable False")
@@ -232,7 +302,7 @@ class Heaplens(gdb.Command):
         gdb.execute(f"r {crash_payload}")
 
         print(DIVIDER)
-        print("Setting breakpoints for set_cmnd()")
+        print("Setting breakpoints")
         self.vul_bkps = []
         self.vul_bkps.append(
             self.GetSetCmndBreakpoint(name="set_cmnd", log=__heaplens_log__))
@@ -241,13 +311,6 @@ class Heaplens(gdb.Command):
         print("Collecting chunk information")
         # 2nd execution: Inspect.
         gdb.execute(f"r {crash_payload}")
-
-        # gdb.execute("p NewArgv[0]")
-        # gdb.execute("p NewArgv[1]")
-        # gdb.execute("p NewArgv[2]")
-        # gdb.execute(f"x /20xg {new1.split(' ')[2]}")
-
-        # print("\n".join(__heaplens_log__['chunks']))
 
         self.cleanup(self.vul_bkps)
 
@@ -258,11 +321,31 @@ class Heaplens(gdb.Command):
         print("Removing breakpoints")
         for bp in bkps:
             bp.delete()
-    print("TODO! Should take care of (de)allocation for backtrace")
 
 
 # Instantiates the class (register the command)
-Heaplens()
+HeaplensCrashSudo()
+
+
+class HeaplensClear(gdb.Command):
+    global __heaplens_log__
+
+    def __init__(self):
+        super().__init__("heaplens-clear", gdb.COMMAND_USER)
+
+    def invoke(self, arg, from_tty):
+        answer = ""
+        while answer not in ["Y", "N"]:
+            answer = input("Clear heaplens log [Y/N]? ").upper()
+        if answer == "Y":
+            __heaplens_log__ = {'bins': [], 'chunks': []}
+            print('bye')
+            print(__heaplens_log__)
+        print("FIXME")
+
+
+# Instantiates the class (register the command)
+HeaplensClear()
 
 
 class HeaplensAddr(gdb.Command):
@@ -273,7 +356,10 @@ class HeaplensAddr(gdb.Command):
 
     def invoke(self, arg, from_tty):
         print("Showing logged addresses of free chunks:")
-        print("\n".join(__heaplens_log__['bins']))
+        try:
+            print("\n".join(__heaplens_log__['bins']))
+        except KeyError:
+            print("Nothing to print")
 
 
 # Instantiates the class (register the command)
@@ -299,6 +385,8 @@ class HeaplensWrite(gdb.Command):
 
         except FileNotFoundError:
             print("Usage: heaplens-write <output_file>")
+        except KeyError:
+            print("Nothing to print")
     print("TODO! Should print backtrace")
 
 
