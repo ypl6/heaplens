@@ -48,7 +48,7 @@ def escape_ansi(line):
 
 # might be broken
 def stoi(s):
-    # this is a program intended for 64-bit machines
+    # this is a program intended for 64-bit machines so pointer sizes are 64 bits
     r = int(s) & 0xffffffffffffffff
     return r
     
