@@ -9,7 +9,7 @@ import json
 import sys
 import os
 sys.path.append(os.getcwd())
-
+#print(os.getcwd())
 from utils import *
 
 """
@@ -454,6 +454,8 @@ class HeaplensDump(HeaplensCommand):
             description="Dump Heaplens logs.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-o", "--output", type=str,
                             help="write to file at path {output}")
+        parser.add_argument("-s", "--show", action="store_true",
+                            help="dumps to stdout")
 
         args = parser.parse_args(args.strip().split(" "))
         return args
@@ -461,43 +463,27 @@ class HeaplensDump(HeaplensCommand):
     def invoke(self, arg, from_tty):
         # Parse arguments
         args = self.parse_args(arg)
+        
         print(DIVIDER)
 
         global __heaplens_log__
-        args = arg.split(" ")
+        #args = arg.split(" ")
 
         if args.output:
-            print("TODO!")
-        else:
-            print("TODO!")
-
-        #
-
-        if len(args) == 0:
-            print("Usage: heaplens [print] [out outputfilepath]")
-            return
-
-        elif len(args) > 2:
-            print("Too many arguments")
-            return
-
-        if args[0] == "print":
-            print(DIVIDER)
-            print("Dumping log...")
-
+            try:
+            	with open(args.output, "w") as fo:
+            		fo.write(json.dumps(heaplens_details))
+            except IOError:
+            	print("Failed to write to a file. Please try again")
+        elif args.show:
+            print("Dumping...")
+            
             for i, (j, k) in enumerate(heaplens_details.items()):
                 print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
                 print("Printing trace:\n", k['backtrace'])
-
-            return
-
-        elif args[0] == "out":
-            with open(args[2], "w") as fo:
-                fo.write(json.dumps(heaplens_details))
-
-        else:
-            print("Invalid arguments")
-            return
+        
+        print("Dump complete") 
+        print(DIVIDER)
 
 
 # Instantiates the class (register the command)
