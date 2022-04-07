@@ -106,6 +106,51 @@ class ReturnValFromBreakpoint(gdb.Breakpoint):
         return self.trigger
     	 
 
+class AllocFunction(gdb.Breakpoint):
+    def __init__(self, name, fname, heaplens_details):
+        super(AllocFunction, self).__init__(name, gdb.BP_BREAKPOINT, internal=False)
+        self.fname = fname
+        self.prev_bp = None
+        self.heaplens_details = heaplens_details
+        self.return_value_bp_list = []
+
+    def stop(self):
+        if self.prev_bp != None:
+            self.prev_bp.delete()
+
+        to_delete = []
+
+        for bp in self.return_value_bp_list:
+            if bp.executed():
+                to_delete.append(bp)
+        
+        for bp in to_delete:
+            bp.delete()
+            self.return_value_bp_list.remove(bp)
+
+
+        size = 0
+        if self.fname == "malloc":
+            size = read_register("rdi")
+        elif self.name == "calloc": # allocates an array so tot size = num objs * size of obj
+            size = read_register("rdi") * read_register("rsi")
+        elif self.fname == "realloc":
+            ptr = read_register("rdi")
+            size = read_register("rsi")
+            if ptr in self.heaplens_details:
+                del self.heaplens_details[ptr]
+
+
+        current_frame = gdb.selected_frame()
+        caller = current_frame.older().pc()
+
+        print(f"{self.fname} size = {hex(size)}, caller = {hex(caller)}")
+        bp = ReturnValFromBreakpoint(f"{hex(caller)}", self.fname, size, self.healens_info)
+        self.return_value_bp_list.append(bp)
+
+        return False
+
+
 # def int_to_string(n):
 #     """Convert int to string. (Not used, not debug-ed)"""
 #     # return str(binascii.unhexlify(hex(int(n))[2:]))
