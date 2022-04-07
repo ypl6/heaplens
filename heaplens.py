@@ -224,7 +224,7 @@ __heaplens_log__ = {'bins': [], 'chunks': []}
 
 
 class GetRetBreakpoint(gdb.Breakpoint):
-    def __init__(self, fname, name, alloc, log):
+    def __init__(self, name, fname, alloc, log):
         super().__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
         self.name = name
         self.fname = fname
@@ -280,9 +280,9 @@ class Heaplens(HeaplensCommand):
     class GetAllocBreakpoint(gdb.Breakpoint):
         """TODO: add description"""
 
-        def __init__(self, name, log):
+        def __init__(self, name, fname, log):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
-            self.name = name
+            self.fname = fname
             self.prev_bp = None
             self.heaplens_details = log
             self.return_value_bp_list = []
@@ -302,11 +302,11 @@ class Heaplens(HeaplensCommand):
                 self.return_value_bp_list.remove(bp)
 
             size = 0
-            if self.name == "malloc":
+            if self.fname == "malloc":
                 size = read_register("rdi")
-            elif self.name == "calloc":  # allocates an array so tot size = num objs * size of obj
+            elif self.fname == "calloc":  # allocates an array so tot size = num objs * size of obj
                 size = read_register("rdi") * read_register("rsi")
-            elif self.name == "realloc":
+            elif self.fname == "realloc":
                 ptr = read_register("rdi")
                 size = read_register("rsi")
                 if ptr in self.heaplens_details:
@@ -316,9 +316,9 @@ class Heaplens(HeaplensCommand):
             caller = current_frame.older().pc()
 
             print(
-                f"{self.name} size = {hex(size)}, caller = {hex(caller)}")
+                f"{self.fname} size = {hex(size)}, caller = {hex(caller)}")
             bp = GetRetBreakpoint(
-                f"{hex(caller)}", self.name, size, self.heaplens_details)
+                f"{hex(caller)}", self.fname, size, self.heaplens_details)
             self.return_value_bp_list.append(bp)
 
             return False
@@ -390,7 +390,7 @@ class Heaplens(HeaplensCommand):
         for f in ["malloc", "calloc", "realloc"]:
             print(f"Hooking alloc function {f}...")
             self.mem_bkps.append(
-                self.GetAllocBreakpoint(name=f, log=heaplens_details))  # , log=__heaplens_log__))
+                self.GetAllocBreakpoint(name=f, fname=f, log=heaplens_details))  # , log=__heaplens_log__))
 
         print(f"Running {run_args}..." if run_args else "Running...")
         gdb.execute(f"r {run_args}" if run_args else "r")
