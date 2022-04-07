@@ -46,9 +46,6 @@ heaplens-dump
 DIVIDER = "-" * 100
 
 
-
-
-    
 class HelloWorld(gdb.Command):
     """Greet the whole world."""
 
@@ -77,7 +74,8 @@ class HeaplensCommand(gdb.Command):
 
 class ReturnValFromBreakpoint(gdb.Breakpoint):
     def __init__(self, name, fname, alloc, heaplens_details):
-        super(ReturnValFromBreakpoint, self).__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
+        super(ReturnValFromBreakpoint, self).__init__(
+            name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
         self.fname = fname
         self.trigger = False
 
@@ -89,7 +87,8 @@ class ReturnValFromBreakpoint(gdb.Breakpoint):
         print(f"{self.fname} returns {hex(ret_address)}")
 
         self.heaplens_details[ret_address] = {}
-        self.heaplens_details[ret_address]['backtrace'] = gdb.execute("bt", to_string=True)
+        self.heaplens_details[ret_address]['backtrace'] = gdb.execute(
+            "bt", to_string=True)
         self.heaplens_details[ret_address]['size'] = self.alloc
 
         backtrace()
@@ -99,7 +98,7 @@ class ReturnValFromBreakpoint(gdb.Breakpoint):
 
     def executed(self):
         return self.trigger
-    	 
+
 
 # def int_to_string(n):
 #     """Convert int to string. (Not used, not debug-ed)"""
@@ -173,13 +172,13 @@ class ListEnvInHeap(HeaplensCommand):
 
         if not args:
             return None, None
-        elif ' -- ' in args: # both run args and args
+        elif ' -- ' in args:  # both run args and args
             args, run_args = args.split(' -- ')
             args = parser.parse_args(args.strip().split(" "))
             return run_args, args
-        elif args.startswith('-- '): # run args only
+        elif args.startswith('-- '):  # run args only
             return args[3:], None
-        else: # args only
+        else:  # args only
             args = parser.parse_args(args.strip().split(" "))
             return None, args
 
@@ -226,7 +225,8 @@ class ListEnvInHeap(HeaplensCommand):
         # print(self.log)
 
         self.free_bkps = []
-        self.free_bkps.append(self.FreeBreakpoint(name="free", log=self.log, cmd_args=args))
+        self.free_bkps.append(self.FreeBreakpoint(
+            name="free", log=self.log, cmd_args=args))
         if args and args.breakpoint:
             gdb.execute(f"br {args.breakpoint}")
 
@@ -263,7 +263,6 @@ class Heaplens(HeaplensCommand):
         def stop(self):
             global __heaplens_log__
             # TODO
-            print(f"alloc: {name}")
             return False
 
     class GetFreeBreakpoint(gdb.Breakpoint):
@@ -275,11 +274,11 @@ class Heaplens(HeaplensCommand):
         def stop(self):
             global __heaplens_log__
             # TODO
-            print("free")
             return False
 
     def parse_args(self, args):
-        parser = argparse.ArgumentParser()
+        parser = argparse.ArgumentParser(description="Collect heap info from memory (de)allocation functions.",
+                                         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-b", "--breakpoint", type=str, default="main",
                             help="stop the executions here (execute br {breakpoint} in gdb)")
 
@@ -325,6 +324,7 @@ class Heaplens(HeaplensCommand):
 
         # TODO: work on info
         # First step is to print chunk info (without backtrace)
+        gdb.execute("r")
 
         # self.cleanup(self.mem_bkps)
 
@@ -342,7 +342,6 @@ class HeaplensCrashSudo(HeaplensCommand):
         super().__init__("heaplens-crash-sudo", gdb.COMMAND_USER)
 
     class GetSetCmndBreakpoint(gdb.Breakpoint):
-        """TODO: add description"""
 
         def __init__(self, name, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
@@ -355,7 +354,7 @@ class HeaplensCrashSudo(HeaplensCommand):
         parser = argparse.ArgumentParser(
             description="A tailored command to examine vulnerable sudo's set_cmnd().",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.add_argument("-s", "--string", type=str, default="A",
+        parser.add_argument("string", metavar="S", type=str, default="A",
                             help="the string to send as NewArgv[2]")
         parser.add_argument("-r", "--repeat", type=int, default=65535,
                             help="repeat the payload string for {repeat} times")
@@ -366,6 +365,15 @@ class HeaplensCrashSudo(HeaplensCommand):
             return parser.parse_args([])
 
     def invoke(self, arg, from_tty):
+        # Parse arguments aake sure current file is sudoedit
+        try:
+            args = self.parse_args(arg)
+            gdb.execute("file sudoedit")
+        except gdb.error:
+            print(
+                "Warning: sudoedit is not found. This command is only for sudoedit.")
+            return
+
         global __heaplens_log__
         print("Initializing Heaplens for sudoedit")
 
@@ -375,7 +383,7 @@ class HeaplensCrashSudo(HeaplensCommand):
         # 1st execution: Make it crash and add breakpoint
         # Code is loaded dynamically, the breakpoint in sudoers.c can be
         # retrieved only if we crash the program
-        crash_payload = "-s '\\' $(python3 -c 'print(\"A\"*65535)')"
+        crash_payload = f"-s '\\' $(python3 -c 'print(\"{args.string}\"*{args.repeat})')"
 
         # enable batch mode silently to suppress the vim process as inferior
         gdb.execute(f"r {crash_payload}")
@@ -473,34 +481,54 @@ class HeaplensDump(HeaplensCommand):
     def __init__(self):
         super().__init__("heaplens-dump", gdb.COMMAND_USER)
 
+    def parse_args(self, args):
+        parser = argparse.ArgumentParser(
+            description="Dump Heaplens logs.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        parser.add_argument("-o", "--output", type=str,
+                            help="write to file at path {output}")
+
+        args = parser.parse_args(args.strip().split(" "))
+        return args
+
     def invoke(self, arg, from_tty):
+        # Parse arguments
+        args = self.parse_args(arg)
+        print(DIVIDER)
+
         global __heaplens_log__
         args = arg.split(" ")
-        
+
+        if args.output:
+            print("TODO!")
+        else:
+            print("TODO!")
+
+        #
+
         if len(args) == 0:
             print("Usage: heaplens [print] [out outputfilepath]")
             return
-        
+
         elif len(args) > 2:
             print("Too many arguments")
             return
-            
+
         if args[0] == "print":
             print(DIVIDER)
             print("Dumping log...")
-            
+
             # TODO complete the variable here
             for i, (j, k) in enumerate({}):
                 print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
                 print("Printing trace:\n", {})
-            
+
             return
-            
+
         elif args[0] == "out":
             with open(args[2], "w") as fo:
-            # TODO complete proper var
+                # TODO complete proper var
                 fo.write(json.dumps({}))
-                
+
         else:
             print("Invalid arguments")
         args = arg.split(" ")
@@ -545,6 +573,7 @@ cmds = [
 
     # "file tests/env-in-heap",
     # "list-env-in-heap -b breakme",
+    # "heaplens-crash-sudo -r 65535 A",
 
     # "heaplens test.txt",
     # "q",
