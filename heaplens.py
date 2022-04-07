@@ -40,6 +40,8 @@ heaplens-dump
 
 DIVIDER = "-" * 100
 
+heaplens_details = {}
+
 
 def escape_ansi(line):
     ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
@@ -519,17 +521,15 @@ class HeaplensDump(gdb.Command):
     	    print(DIVIDER)
     	    print("Dumping log...")
     	    
-    	    # TODO complete the variable here
-    	    for i, (j, k) in enumerate({}):
+    	    for i, (j, k) in enumerate(heaplens_details.items()):
     	    	print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
-    	    	print("Printing trace:\n", {})
+    	    	print("Printing trace:\n", k['backtrace'])
     	    
     	    return
     	    
     	elif args[0] == "out":
     	    with open(args[2], "w") as fo:
-    	    # TODO complete proper var
-    	    	fo.write(json.dumps({}))
+    	    	fo.write(json.dumps(heaplens_details))
     	    	
     	else:
     	    print("Invalid arguments")
