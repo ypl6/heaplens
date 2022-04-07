@@ -278,9 +278,9 @@ class Heaplens(HeaplensCommand):
     class GetAllocBreakpoint(gdb.Breakpoint):
         """TODO: add description"""
 
-        def __init__(self, name, fname):
+        def __init__(self, name):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
-            self.fname = fname
+            self.name = name
             self.prev_bp = None
             self.return_value_bp_list = []
 
@@ -300,11 +300,11 @@ class Heaplens(HeaplensCommand):
                 self.return_value_bp_list.remove(bp)
 
             size = 0
-            if self.fname == "malloc":
+            if self.name == "malloc":
                 size = read_register("rdi")
-            elif self.fname == "calloc":  # allocates an array so tot size = num objs * size of obj
+            elif self.name == "calloc":  # allocates an array so tot size = num objs * size of obj
                 size = read_register("rdi") * read_register("rsi")
-            elif self.fname == "realloc":
+            elif self.name == "realloc":
                 ptr = read_register("rdi")
                 size = read_register("rsi")
                 if ptr in heaplens_details:
@@ -314,9 +314,9 @@ class Heaplens(HeaplensCommand):
             caller = current_frame.older().pc()
 
             print(
-                f"{self.fname} size = {hex(size)}, caller = {hex(caller)}")
+                f"{self.name} size = {hex(size)}, caller = {hex(caller)}")
             bp = GetRetBreakpoint(
-                f"{hex(caller)}", self.fname, size)
+                f"*{hex(caller)}", self.name, size)
             self.return_value_bp_list.append(bp)
 
             return False
@@ -385,16 +385,9 @@ class Heaplens(HeaplensCommand):
         self.mem_bkps.append(
             self.GetFreeBreakpoint(name="free"))
 
-        alloc_series = {
-            "malloc": "__GI___libc_malloc",
-            "realloc": "__GI___libc_realloc",
-            "calloc": "__libc_calloc",
-        }
-
-        for func, source in alloc_series.items():
+        for func in ["malloc", "realloc", "calloc"]:
             print(f"Hooking {func} function...")
-            self.mem_bkps.append(
-                self.GetAllocBreakpoint(name=source, fname=func))
+            self.mem_bkps.append(self.GetAllocBreakpoint(name=func))
 
         print(f"Running {run_args}..." if run_args else "Running...")
         gdb.execute(f"r {run_args}" if run_args else "r")
@@ -499,7 +492,7 @@ cmds = [
 
     # "file tests/env-in-heap",
     # "list-env-in-heap -b breakme",
-    "heaplens -b set_cmnd -- -s '\\\\' $(python3 -c 'print(\"A\"*65535)')",
+    "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     # "q",
 ]
 for cmd in cmds:
