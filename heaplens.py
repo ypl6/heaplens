@@ -7,9 +7,12 @@ import re
 import argparse
 import json
 import sys
-import os
-sys.path.append(os.getcwd())
-#print(os.getcwd())
+import pathlib
+
+# custom imports in the heaplens dir
+heaplens_path = str(pathlib.Path(__file__).parent.resolve())
+sys.path.append(heaplens_path)
+
 from utils import *
 
 """
@@ -463,7 +466,7 @@ class HeaplensDump(HeaplensCommand):
     def invoke(self, arg, from_tty):
         # Parse arguments
         args = self.parse_args(arg)
-        
+
         print(DIVIDER)
 
         global __heaplens_log__
@@ -471,18 +474,18 @@ class HeaplensDump(HeaplensCommand):
 
         if args.output:
             try:
-            	with open(args.output, "w") as fo:
-            		fo.write(json.dumps(heaplens_details))
+                with open(args.output, "w") as fo:
+                    fo.write(json.dumps(heaplens_details))
             except IOError:
-            	print("Failed to write to a file. Please try again")
+                print("Failed to write to a file. Please try again")
         elif args.show:
             print("Dumping...")
-            
+
             for i, (j, k) in enumerate(heaplens_details.items()):
                 print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
                 print("Printing trace:\n", k['backtrace'])
-        
-        print("Dump complete") 
+
+        print("Dump complete")
         print(DIVIDER)
 
 
