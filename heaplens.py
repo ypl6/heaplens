@@ -7,8 +7,11 @@ import re
 import argparse
 import json
 import sys
-import os
-sys.path.append(os.getcwd())
+import pathlib
+
+# custom imports in the heaplens dir
+heaplens_path = str(pathlib.Path(__file__).parent.resolve())
+sys.path.append(heaplens_path + "/utils")
 
 from utils import *
 
@@ -73,12 +76,6 @@ class HeaplensCommand(gdb.Command):
               (f'from {tag}...' if tag != '' else '...'))
         for bp in bkps:
             bp.delete()
-
-
-# def int_to_string(n):
-#     """Convert int to string. (Not used, not debug-ed)"""
-#     # return str(binascii.unhexlify(hex(int(n))[2:]))
-#     return bytes.fromhex(hex(int(n))[2:]).decode("ASCII")[::-1]
 
 
 class ListEnvInHeap(HeaplensCommand):
@@ -224,25 +221,31 @@ __heaplens_log__ = {'bins': [], 'chunks': []}
 
 
 class GetRetBreakpoint(gdb.Breakpoint):
-    def __init__(self, name, fname, alloc, log):
-        super().__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
+    def __init__(self, name, fname, alloc, verbose):
+        super().__init__(
+            name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
         self.name = name
         self.fname = fname
         self.trigger = False
-
-        self.heaplens_details = log
         self.alloc_size = alloc
+        self.verbose = verbose
 
     def stop(self):
+        global heaplens_details
         ret_address = read_register("rax")
-        print(f"{self.fname} returns {hex(ret_address)}")
+        if self.verbose:
+            print(f"{self.fname} returns {hex(ret_address)}")
 
-        self.heaplens_details[ret_address] = {}
-        self.heaplens_details[ret_address]['backtrace'] = gdb.execute(
-            "bt", to_string=True)
-        self.heaplens_details[ret_address]['size'] = self.alloc_size
+        bt = gdb.execute("bt", to_string=True)
+        bt15 = gdb.execute("bt 15", to_string=True)
 
-        backtrace()
+        heaplens_details[ret_address] = {}
+        heaplens_details[ret_address]['backtrace'] = bt
+        heaplens_details[ret_address]['size'] = self.alloc_size
+
+        if self.verbose:
+            print(bt15)
+            print("\n", DIVIDER)
 
         self.trigger = True
         return False
@@ -269,25 +272,26 @@ class Heaplens(HeaplensCommand):
     class GetCustomBreakpoint(gdb.Breakpoint):
         """Stop at a specific breakpoint and update log."""
 
-        def __init__(self, name, log):
+        def __init__(self, name):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
-            self.log = log
 
         def stop(self):
-            record_updated_chunks(self.log)
+            global __heaplens_log__
+            record_updated_chunks(__heaplens_log__)
             return True
 
     class GetAllocBreakpoint(gdb.Breakpoint):
         """TODO: add description"""
 
-        def __init__(self, name, fname, log):
+        def __init__(self, name, verbose):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
-            self.fname = fname
+            self.name = name
             self.prev_bp = None
-            self.heaplens_details = log
             self.return_value_bp_list = []
+            self.verbose = verbose
 
         def stop(self):
+            global heaplens_details
             if self.prev_bp != None:
                 self.prev_bp.delete()
 
@@ -302,23 +306,24 @@ class Heaplens(HeaplensCommand):
                 self.return_value_bp_list.remove(bp)
 
             size = 0
-            if self.fname == "malloc":
+            if self.name == "malloc":
                 size = read_register("rdi")
-            elif self.fname == "calloc":  # allocates an array so tot size = num objs * size of obj
+            elif self.name == "calloc":  # allocates an array so tot size = num objs * size of obj
                 size = read_register("rdi") * read_register("rsi")
-            elif self.fname == "realloc":
+            elif self.name == "realloc":
                 ptr = read_register("rdi")
                 size = read_register("rsi")
-                if ptr in self.heaplens_details:
-                    del self.heaplens_details[ptr]
+                if ptr in heaplens_details:
+                    del heaplens_details[ptr]
 
             current_frame = gdb.selected_frame()
             caller = current_frame.older().pc()
 
-            print(
-                f"{self.fname} size = {hex(size)}, caller = {hex(caller)}")
-            bp = GetRetBreakpoint(
-                f"{hex(caller)}", self.fname, size, self.heaplens_details)
+            if self.verbose:
+                print(f"{self.name} size = {hex(size)}, caller = {hex(caller)}")
+
+            bp = GetRetBreakpoint(name=f"*{hex(caller)}", fname=self.name,
+                                  alloc=size, verbose=self.verbose)
             self.return_value_bp_list.append(bp)
 
             return False
@@ -326,7 +331,7 @@ class Heaplens(HeaplensCommand):
     class GetFreeBreakpoint(gdb.Breakpoint):
         """TODO: add description"""
 
-        def __init__(self, name, log):
+        def __init__(self, name):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
 
         def stop(self):
@@ -341,7 +346,8 @@ class Heaplens(HeaplensCommand):
         #                     help="increase output verbosity")
         parser.add_argument("-b", "--breakpoint", type=str, action="append",
                             help="stop the executions here (execute br {breakpoint} in gdb)")
-
+        parser.add_argument("-v", "--verbose", action="store_true",
+                            help="increase output verbosity")
         if not args:
             args = parser.parse_args([])
             return None, args
@@ -381,16 +387,16 @@ class Heaplens(HeaplensCommand):
             for bkp in args.breakpoint:
                 print(f"Setting breakpoint at {bkp}...")
                 self.custom_bkps.append(
-                    self.GetCustomBreakpoint(name=f"{bkp}", log=__heaplens_log__))
+                    self.GetCustomBreakpoint(name=f"{bkp}"))
 
         print(f"Hooking free function free...")
         self.mem_bkps.append(
-            self.GetFreeBreakpoint(name="free", log=heaplens_details))  # , log=__heaplens_log__))
+            self.GetFreeBreakpoint(name="free"))
 
-        for f in ["malloc", "calloc", "realloc"]:
-            print(f"Hooking alloc function {f}...")
+        for func in ["malloc", "realloc", "calloc"]:
+            print(f"Hooking {func} function...")
             self.mem_bkps.append(
-                self.GetAllocBreakpoint(name=f, fname=f, log=heaplens_details))  # , log=__heaplens_log__))
+                self.GetAllocBreakpoint(name=func, verbose=args.verbose))
 
         print(f"Running {run_args}..." if run_args else "Running...")
         gdb.execute(f"r {run_args}" if run_args else "r")
@@ -453,10 +459,12 @@ class HeaplensDump(HeaplensCommand):
         parser = argparse.ArgumentParser(
             description="Dump Heaplens logs.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-o", "--output", type=str,
-                            help="write to file at path {output}")
+                            help="(option) write to file at path {output}")
 
-        args = parser.parse_args(args.strip().split(" "))
-        return args
+        if args:
+            return parser.parse_args(args.strip().split(" "))
+        else:
+            return parser.parse_args([])
 
     def invoke(self, arg, from_tty):
         # Parse arguments
@@ -464,40 +472,22 @@ class HeaplensDump(HeaplensCommand):
         print(DIVIDER)
 
         global __heaplens_log__
-        args = arg.split(" ")
+        global heaplens_details
 
+        print("Dumping...")
         if args.output:
-            print("TODO!")
+            try:
+                with open(args.output, "w") as fo:
+                    fo.write(json.dumps(heaplens_details))
+            except (IOError, FileNotFoundError):
+                print("Failed to write to a file. Please try again.")
         else:
-            print("TODO!")
-
-        #
-
-        if len(args) == 0:
-            print("Usage: heaplens [print] [out outputfilepath]")
-            return
-
-        elif len(args) > 2:
-            print("Too many arguments")
-            return
-
-        if args[0] == "print":
-            print(DIVIDER)
-            print("Dumping log...")
-
             for i, (j, k) in enumerate(heaplens_details.items()):
                 print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
                 print("Printing trace:\n", k['backtrace'])
 
-            return
-
-        elif args[0] == "out":
-            with open(args[2], "w") as fo:
-                fo.write(json.dumps(heaplens_details))
-
-        else:
-            print("Invalid arguments")
-            return
+        print("Dump complete")
+        print(DIVIDER)
 
 
 # Instantiates the class (register the command)
@@ -515,4 +505,5 @@ cmds = [
     # "q",
 ]
 for cmd in cmds:
+    print(cmd)
     gdb.execute(cmd)

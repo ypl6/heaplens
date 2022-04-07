@@ -1,6 +1,6 @@
 import re
 import gdb
-from heaplens import *
+
 
 def escape_ansi(line):
     ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
@@ -13,6 +13,12 @@ def escape_ansi(line):
 #     else:
 #         return None
 
+# def int_to_string(n):
+#     """Convert int to string. (Not used, not debug-ed)"""
+#     # return str(binascii.unhexlify(hex(int(n))[2:]))
+#     return bytes.fromhex(hex(int(n))[2:]).decode("ASCII")[::-1]
+
+
 def stoi(s):
     # might be broken
     # this is a program intended for 64-bit machines so pointer sizes are 64 bits
@@ -24,11 +30,6 @@ def read_register(register):
     val = gdb.parse_and_eval("${}".format(register))
     s_val = stoi(val)
     return s_val
-
-
-def backtrace():
-    gdb.execute("bt 15")
-    print("\n", DIVIDER)
 
 
 def record_updated_chunks(log):
