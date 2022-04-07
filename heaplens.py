@@ -42,6 +42,7 @@ heaplens-dump
 
 """
 
+
 DIVIDER = "-" * 100
 
 heaplens_details = {}
@@ -222,6 +223,34 @@ ListEnvInHeap()
 __heaplens_log__ = {'bins': [], 'chunks': []}
 
 
+class GetRetBreakpoint(gdb.Breakpoint):
+    def __init__(self, fname, name, alloc, log):
+        super().__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
+        self.name = name
+        self.fname = fname
+        self.trigger = False
+
+        self.heaplens_details = log
+        self.alloc_size = alloc
+
+    def stop(self):
+        ret_address = read_register("rax")
+        print(f"{self.fname} returns {hex(ret_address)}")
+
+        self.heaplens_details[ret_address] = {}
+        self.heaplens_details[ret_address]['backtrace'] = gdb.execute(
+            "bt", to_string=True)
+        self.heaplens_details[ret_address]['size'] = self.alloc_size
+
+        backtrace()
+
+        self.trigger = True
+        return False
+
+    def executed(self):
+        return self.trigger
+
+
 class Heaplens(HeaplensCommand):
     """A generic Heaplens command that collect heap info from memory (de)allocation functions."""
 
@@ -247,32 +276,6 @@ class Heaplens(HeaplensCommand):
         def stop(self):
             record_updated_chunks(self.log)
             return True
-
-    class GetRetBreakpoint(gdb.Breakpoint):
-        def __init__(self, name, alloc, log):
-            super().__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
-            self.name = name
-            self.trigger = False
-
-            self.heap_trace_info = log
-            self.alloc_size = alloc
-
-        def stop(self):
-            ret_address = read_register("rax")
-            print(f"{self.name} returns {hex(ret_address)}")
-
-            self.heaplens_details[ret_address] = {}
-            self.heaplens_details[ret_address]['backtrace'] = gdb.execute(
-                "bt", to_string=True)
-            self.heaplens_details[ret_address]['size'] = self.alloc
-
-            backtrace()
-
-            self.trigger = True
-            return False
-
-        def executed(self):
-            return self.trigger
 
     class GetAllocBreakpoint(gdb.Breakpoint):
         """TODO: add description"""
@@ -312,8 +315,9 @@ class Heaplens(HeaplensCommand):
             current_frame = gdb.selected_frame()
             caller = current_frame.older().pc()
 
-            print(f"{self.name} size = {hex(size)}, caller = {hex(caller)}")
-            bp = HeapLens.GetRetBreakpoint(
+            print(
+                f"{self.name} size = {hex(size)}, caller = {hex(caller)}")
+            bp = GetRetBreakpoint(
                 f"{hex(caller)}", self.name, size, self.heaplens_details)
             self.return_value_bp_list.append(bp)
 
@@ -333,6 +337,8 @@ class Heaplens(HeaplensCommand):
     def parse_args(self, args):
         parser = argparse.ArgumentParser(description="Collect heap info from memory (de)allocation functions.",
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        # parser.add_argument("-v", "--verbose", action="store_true",
+        #                     help="increase output verbosity")
         parser.add_argument("-b", "--breakpoint", type=str, action="append",
                             help="stop the executions here (execute br {breakpoint} in gdb)")
 

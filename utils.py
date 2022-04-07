@@ -1,15 +1,20 @@
 import re
 import gdb
-
+from heaplens import *
 
 def escape_ansi(line):
     ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
     return ansi_escape.sub('', line)
 
-# might be broken
 
+# def verboseprint(verbose=True, *args, **kwargs):
+#     if verbose:
+#         print(*args, **kwargs)
+#     else:
+#         return None
 
 def stoi(s):
+    # might be broken
     # this is a program intended for 64-bit machines so pointer sizes are 64 bits
     r = int(s) & 0xffffffffffffffff
     return r
