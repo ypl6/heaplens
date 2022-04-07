@@ -221,26 +221,31 @@ __heaplens_log__ = {'bins': [], 'chunks': []}
 
 
 class GetRetBreakpoint(gdb.Breakpoint):
-    def __init__(self, name, fname, alloc):
+    def __init__(self, name, fname, alloc, verbose):
         super().__init__(
             name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
         self.name = name
         self.fname = fname
         self.trigger = False
         self.alloc_size = alloc
+        self.verbose = verbose
 
     def stop(self):
         global heaplens_details
         ret_address = read_register("rax")
-        print(f"{self.fname} returns {hex(ret_address)}")
+        if self.verbose:
+            print(f"{self.fname} returns {hex(ret_address)}")
+
+        bt = gdb.execute("bt", to_string=True)
+        bt15 = gdb.execute("bt 15", to_string=True)
 
         heaplens_details[ret_address] = {}
-        heaplens_details[ret_address]['backtrace'] = gdb.execute(
-            "bt", to_string=True)
+        heaplens_details[ret_address]['backtrace'] = bt
         heaplens_details[ret_address]['size'] = self.alloc_size
 
-        gdb.execute("bt 15")
-        print("\n", DIVIDER)
+        if self.verbose:
+            print(bt15)
+            print("\n", DIVIDER)
 
         self.trigger = True
         return False
@@ -278,11 +283,12 @@ class Heaplens(HeaplensCommand):
     class GetAllocBreakpoint(gdb.Breakpoint):
         """TODO: add description"""
 
-        def __init__(self, name):
+        def __init__(self, name, verbose):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
             self.name = name
             self.prev_bp = None
             self.return_value_bp_list = []
+            self.verbose = verbose
 
         def stop(self):
             global heaplens_details
@@ -313,10 +319,11 @@ class Heaplens(HeaplensCommand):
             current_frame = gdb.selected_frame()
             caller = current_frame.older().pc()
 
-            print(
-                f"{self.name} size = {hex(size)}, caller = {hex(caller)}")
-            bp = GetRetBreakpoint(
-                f"*{hex(caller)}", self.name, size)
+            if self.verbose:
+                print(f"{self.name} size = {hex(size)}, caller = {hex(caller)}")
+
+            bp = GetRetBreakpoint(name=f"*{hex(caller)}", fname=self.name,
+                                  alloc=size, verbose=self.verbose)
             self.return_value_bp_list.append(bp)
 
             return False
@@ -339,7 +346,8 @@ class Heaplens(HeaplensCommand):
         #                     help="increase output verbosity")
         parser.add_argument("-b", "--breakpoint", type=str, action="append",
                             help="stop the executions here (execute br {breakpoint} in gdb)")
-
+        parser.add_argument("-v", "--verbose", action="store_true",
+                            help="increase output verbosity")
         if not args:
             args = parser.parse_args([])
             return None, args
@@ -387,7 +395,8 @@ class Heaplens(HeaplensCommand):
 
         for func in ["malloc", "realloc", "calloc"]:
             print(f"Hooking {func} function...")
-            self.mem_bkps.append(self.GetAllocBreakpoint(name=func))
+            self.mem_bkps.append(
+                self.GetAllocBreakpoint(name=func, verbose=args.verbose))
 
         print(f"Running {run_args}..." if run_args else "Running...")
         gdb.execute(f"r {run_args}" if run_args else "r")
