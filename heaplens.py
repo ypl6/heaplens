@@ -65,14 +65,24 @@ class HelloWorld(gdb.Command):
 # Instantiates the class (register the command)
 HelloWorld()
 
+
+class HeaplensCommand(gdb.Command):
+    """Class to provide common methods. Not to be instantiated."""
+
+    def cleanup(self, bkps):
+        print("Removing breakpoints")
+        for bp in bkps:
+            bp.delete()
+
+
 class ReturnValFromBreakpoint(gdb.Breakpoint):
     def __init__(self, name, fname, alloc, heaplens_details):
         super(ReturnValFromBreakpoint, self).__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
         self.fname = fname
         self.trigger = False
 
-        self.heap_trace_info = heap_trace_info
-        self.alloc_size = alloc_size
+        self.heap_trace_info = heaplens_details
+        self.alloc_size = alloc
 
     def stop(self):
         ret_address = read_register("rax")
@@ -97,7 +107,7 @@ class ReturnValFromBreakpoint(gdb.Breakpoint):
 #     return bytes.fromhex(hex(int(n))[2:]).decode("ASCII")[::-1]
 
 
-class ListEnvInHeap(gdb.Command):
+class ListEnvInHeap(HeaplensCommand):
     """List envirnoment variables that might affect the heap layout."""
 
     def __init__(self):
@@ -148,7 +158,8 @@ class ListEnvInHeap(gdb.Command):
             return False
 
     def parse_args(self, args):
-        parser = argparse.ArgumentParser()
+        parser = argparse.ArgumentParser(
+            description="List envirnoment variables that might affect the heap layout.")
         parser.add_argument("-v", "--verbose", action="store_true",
                             help="increase output verbosity")
         parser.add_argument("--prefix", type=str,
@@ -230,11 +241,6 @@ class ListEnvInHeap(gdb.Command):
         # Re-enable gef output
         gdb.execute(f"gef config context.enable True", to_string=True)
 
-    def cleanup(self, bkps):
-        print("Removing breakpoints")
-        for bp in bkps:
-            bp.delete()
-
 
 # Instantiates the class (register the command)
 ListEnvInHeap()
@@ -242,7 +248,8 @@ ListEnvInHeap()
 __heaplens_log__ = {'bins': [], 'chunks': []}
 
 
-class Heaplens(gdb.Command):
+class Heaplens(HeaplensCommand):
+    """A generic Heaplens command that collect heap info from memory (de)allocation functions."""
 
     def __init__(self):
         super().__init__("heaplens", gdb.COMMAND_USER)
@@ -254,7 +261,9 @@ class Heaplens(gdb.Command):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
 
         def stop(self):
+            global __heaplens_log__
             # TODO
+            print(f"alloc: {name}")
             return False
 
     class GetFreeBreakpoint(gdb.Breakpoint):
@@ -264,35 +273,61 @@ class Heaplens(gdb.Command):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
 
         def stop(self):
+            global __heaplens_log__
             # TODO
+            print("free")
             return False
 
+    def parse_args(self, args):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("-b", "--breakpoint", type=str, default="main",
+                            help="stop the executions here (execute br {breakpoint} in gdb)")
+
+        if not args:
+            args = parser.parse_args([])
+            return None, args
+        elif ' -- ' in args:  # both run args and args
+            args, run_args = args.split(' -- ')
+            args = parser.parse_args(args.strip().split(" "))
+            return run_args, args
+        elif args.startswith('-- '):  # run args only
+            return args[3:], None
+        else:  # args only
+            args = parser.parse_args(args.strip().split(" "))
+            return None, args
+
     def invoke(self, arg, from_tty):
+        # Parse arguments
+        run_args, args = self.parse_args(arg)
+        print(DIVIDER)
+
         global __heaplens_log__
-        print("Initializing heaplens")
+        print("Initializing Heaplens")
+        print(f"Setting breakpoints at {args.breakpoint}...")
+        print(f"Running {run_args}")
+        print(DIVIDER)
 
         # Disable gef output
         gdb.execute("gef config context.enable False")
-        gdb.execute("break main")
-        gdb.execute("r")
+        gdb.execute(f"break {args.breakpoint}")
+        gdb.execute(f"r {run_args}" if run_args else "r")
 
-        print(DIVIDER)
-        print("Setting breakpoints for set_cmnd()")
-        self.free_bkps = []
-        self.alloc_bkps = []
+        self.mem_bkps = []
 
-        self.free_bkps.append(
-            self.GetFreeBreakpoint(name="free", log=__heaplens_log__))  # ?
-
-        # TODO: alloc series
+        self.mem_bkps.append(
+            self.GetFreeBreakpoint(name="free", log=__heaplens_log__))
+        self.mem_bkps.append(
+            self.GetAllocBreakpoint(name="malloc", log=__heaplens_log__))
+        self.mem_bkps.append(
+            self.GetAllocBreakpoint(name="calloc", log=__heaplens_log__))
+        self.mem_bkps.append(
+            self.GetAllocBreakpoint(name="realloc", log=__heaplens_log__))
 
         # TODO: work on info
         # First step is to print chunk info (without backtrace)
 
-    def cleanup(self, bkps):
-        print("Removing breakpoints")
-        for bp in bkps:
-            bp.delete()
+        # self.cleanup(self.mem_bkps)
+
     print("TODO")
 
 
@@ -300,7 +335,9 @@ class Heaplens(gdb.Command):
 Heaplens()
 
 
-class HeaplensCrashSudo(gdb.Command):
+class HeaplensCrashSudo(HeaplensCommand):
+    """Examine vulnerable sudo's set_cmnd()."""
+
     def __init__(self):
         super().__init__("heaplens-crash-sudo", gdb.COMMAND_USER)
 
@@ -314,9 +351,23 @@ class HeaplensCrashSudo(gdb.Command):
             record_updated_chunks()
             return True
 
+    def parse_args(self, args):
+        parser = argparse.ArgumentParser(
+            description="A tailored command to examine vulnerable sudo's set_cmnd().",
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        parser.add_argument("-s", "--string", type=str, default="A",
+                            help="the string to send as NewArgv[2]")
+        parser.add_argument("-r", "--repeat", type=int, default=65535,
+                            help="repeat the payload string for {repeat} times")
+
+        if args:
+            return parser.parse_args(args.strip().split(" "))
+        else:
+            return parser.parse_args([])
+
     def invoke(self, arg, from_tty):
         global __heaplens_log__
-        print("Initializing heaplens for set_cmnd()")
+        print("Initializing Heaplens for sudoedit")
 
         # Disable gef output
         gdb.execute("gef config context.enable False")
@@ -345,17 +396,14 @@ class HeaplensCrashSudo(gdb.Command):
         # Re-enable gef output
         gdb.execute("gef config context.enable True")
 
-    def cleanup(self, bkps):
-        print("Removing breakpoints")
-        for bp in bkps:
-            bp.delete()
-
 
 # Instantiates the class (register the command)
 HeaplensCrashSudo()
 
 
-class HeaplensClear(gdb.Command):
+class HeaplensClear(HeaplensCommand):
+    """Clear heaplens logs."""
+
     def __init__(self):
         super().__init__("heaplens-clear", gdb.COMMAND_USER)
 
@@ -363,7 +411,7 @@ class HeaplensClear(gdb.Command):
         global __heaplens_log__
         answer = ""
         while answer not in ["Y", "N"]:
-            answer = input("Clear heaplens log [Y/N]? ").upper()
+            answer = input("Clear Heaplens log [Y/N]? ").upper()
         if answer == "Y":
             __heaplens_log__ = {'bins': [], 'chunks': []}
             print("Heaplens logs cleared")
@@ -373,7 +421,9 @@ class HeaplensClear(gdb.Command):
 HeaplensClear()
 
 
-class HeaplensAddr(gdb.Command):
+class HeaplensAddr(HeaplensCommand):
+    """Print recorded addresses of free chunks."""
+
     def __init__(self):
         super().__init__("heaplens-addr", gdb.COMMAND_USER)
 
@@ -390,34 +440,36 @@ class HeaplensAddr(gdb.Command):
 HeaplensAddr()
 
 
-class HeaplensWrite(gdb.Command):
-    def __init__(self):
-        super().__init__("heaplens-write", gdb.COMMAND_USER)
+# class HeaplensWrite(gdb.Command):
+#     def __init__(self):
+#         super().__init__("heaplens-write", gdb.COMMAND_USER)
 
-    def invoke(self, arg, from_tty):
-        global __heaplens_log__
-        print(f"Writing chunk info: {arg}")
-        args = arg.split(" ")
+#     def invoke(self, arg, from_tty):
+#         global __heaplens_log__
+#         print(f"Writing chunk info: {arg}")
+#         args = arg.split(" ")
 
-        try:
-            with open(args[0], "w+") as f:
-                content = ""
-                content += "\n".join(__heaplens_log__['chunks'])
-                f.write(escape_ansi(content))
-            print(f"Successfully write to {arg}")
+#         try:
+#             with open(args[0], "w+") as f:
+#                 content = ""
+#                 content += "\n".join(__heaplens_log__['chunks'])
+#                 f.write(escape_ansi(content))
+#             print(f"Successfully write to {arg}")
 
-        except FileNotFoundError:
-            print("Usage: heaplens-write <output_file>")
-        except KeyError:
-            print("Nothing to print")
-    print("TODO! Should print backtrace")
+#         except FileNotFoundError:
+#             print("Usage: heaplens-write <output_file>")
+#         except KeyError:
+#             print("Nothing to print")
+#     print("TODO! Should print backtrace")
+#
+#
+# # Instantiates the class (register the command)
+# HeaplensWrite()
 
 
-# Instantiates the class (register the command)
-HeaplensWrite()
+class HeaplensDump(HeaplensCommand):
+    """Dump Heaplens logs."""
 
-
-class HeaplensDump(gdb.Command):
     def __init__(self):
         super().__init__("heaplens-dump", gdb.COMMAND_USER)
 

@@ -7,6 +7,8 @@ def escape_ansi(line):
     return ansi_escape.sub('', line)
 
 # might be broken
+
+
 def stoi(s):
     # this is a program intended for 64-bit machines so pointer sizes are 64 bits
     r = int(s) & 0xffffffffffffffff
@@ -24,9 +26,7 @@ def backtrace():
     print("\n", DIVIDER)
 
 
-def record_updated_chunks():
-    global __heaplens_log__
-
+def record_updated_chunks(log, show_bt):
     addr_re = r'.*addr=(.{14})'
     bins = gdb.execute("heap bins", to_string=True)
     for bin in bins.splitlines():
