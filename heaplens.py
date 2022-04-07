@@ -35,7 +35,6 @@ set solib-search-path /lib/sudo
 Commands
 list-env-in-heap
 heaplens
-heaplens-crash-sudo
 heaplens-clear
 heaplens-write
 heaplens-addr
@@ -68,8 +67,9 @@ HelloWorld()
 class HeaplensCommand(gdb.Command):
     """Class to provide common methods. Not to be instantiated."""
 
-    def cleanup(self, bkps):
-        print("Removing breakpoints")
+    def cleanup(self, bkps, tag=""):
+        print("Removing breakpoints" +
+              (f'from {tag}...' if tag != '' else '...'))
         for bp in bkps:
             bp.delete()
 
@@ -231,11 +231,22 @@ class Heaplens(HeaplensCommand):
     class GetMainBreakpoint(gdb.Breakpoint):
         """A dummy breakpoint for the first execution to ensure free/alloc functions can be hooked."""
 
-        def __init__(self, name, *args, **kwargs):
+        def __init__(self, name):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
 
         def stop(self):
             return False
+
+    class GetCustomBreakpoint(gdb.Breakpoint):
+        """Stop at a specific breakpoint and update log."""
+
+        def __init__(self, name, log):
+            super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
+            self.log = log
+
+        def stop(self):
+            record_updated_chunks(self.log)
+            return True
 
     class GetRetBreakpoint(gdb.Breakpoint):
         def __init__(self, name, fname, alloc, heaplens_details):
@@ -350,8 +361,6 @@ class Heaplens(HeaplensCommand):
 
         global __heaplens_log__
         print("Initializing Heaplens")
-        print(f"Setting breakpoints at {args.breakpoint}...")
-        print(f"Running {run_args}")
         print(DIVIDER)
 
         # Disable gef output
@@ -366,103 +375,31 @@ class Heaplens(HeaplensCommand):
         self.custom_bkps = []
         self.mem_bkps = []
 
-        self.mem_bkps.append(
-            self.GetFreeBreakpoint(name="free", log=__heaplens_log__))
-        self.mem_bkps.append(
-            self.GetAllocBreakpoint(name="malloc", log=__heaplens_log__))
-        self.mem_bkps.append(
-            self.GetAllocBreakpoint(name="calloc", log=__heaplens_log__))
-        self.mem_bkps.append(
-            self.GetAllocBreakpoint(name="realloc", log=__heaplens_log__))
+        if args.breakpoint:
+            for bkp in args.breakpoint:
+                print(f"Setting breakpoint at {bkp}...")
+                self.custom_bkps.append(
+                    self.GetCustomBreakpoint(name=f"{bkp}", log=__heaplens_log__))
 
-        gdb.execute(f"break {args.breakpoint}")
+        # self.mem_bkps.append(
+        #     self.GetFreeBreakpoint(name="free"))  # , log=__heaplens_log__))
+        # self.mem_bkps.append(
+        #     self.GetAllocBreakpoint(name="malloc"))  # , log=__heaplens_log__))
+        # self.mem_bkps.append(
+        #     self.GetAllocBreakpoint(name="calloc"))  # , log=__heaplens_log__))
+        # self.mem_bkps.append(
+        #     self.GetAllocBreakpoint(name="realloc"))  # , log=__heaplens_log__))
+
+        print(f"Running {run_args}..." if run_args else "Running...")
         gdb.execute(f"r {run_args}" if run_args else "r")
 
-        # self.cleanup(self.mem_bkps)
+        self.cleanup(self.mem_bkps, tag="mem_bkps")
 
         gdb.execute("gef config context.enable True")
-
-    print("TODO")
 
 
 # Instantiates the class (register the command)
 Heaplens()
-
-
-class HeaplensCrashSudo(HeaplensCommand):
-    """Examine vulnerable sudo's set_cmnd()."""
-
-    def __init__(self):
-        super().__init__("heaplens-crash-sudo", gdb.COMMAND_USER)
-
-    class GetSetCmndBreakpoint(gdb.Breakpoint):
-        """Print chunk info at the vulnerable set_cmnd() function"""
-
-        def __init__(self, name, log, *args, **kwargs):
-            super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
-            self.log = log
-
-        def stop(self):
-            record_updated_chunks(self.log)
-            return True
-
-    def parse_args(self, args):
-        parser = argparse.ArgumentParser(
-            description="A tailored command to examine vulnerable sudo's set_cmnd().",
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.add_argument("-s", "--string", type=str, default="A",
-                            help="the string to send as NewArgv[2]")
-        parser.add_argument("-r", "--repeat", type=int, default=65535,
-                            help="repeat the payload string for {repeat} times")
-
-        if args:
-            return parser.parse_args(args.strip().split(" "))
-        else:
-            return parser.parse_args([])
-
-    def invoke(self, arg, from_tty):
-        # Parse arguments aake sure current file is sudoedit
-        try:
-            args = self.parse_args(arg)
-            gdb.execute("file sudoedit")
-        except gdb.error:
-            print(
-                "Warning: sudoedit is not found. This command is only for sudoedit.")
-            return
-
-        global __heaplens_log__
-        print("Initializing Heaplens for sudoedit")
-
-        # # Disable gef output
-        # gdb.execute("gef config context.enable False")
-
-        # # 1st execution: Make it crash and add breakpoint
-        # # Code is loaded dynamically, the breakpoint in sudoers.c can be
-        # # retrieved only if we crash the program
-        # crash_payload = f"-s '\\' $(python3 -c 'print(\"{args.string}\"*{args.repeat})')"
-
-        # # enable batch mode silently to suppress the vim process as inferior
-        # gdb.execute(f"r {crash_payload}")
-
-        # print(DIVIDER)
-        # print("Setting breakpoints")
-        # self.vul_bkps = []
-        # self.vul_bkps.append(
-        #     self.GetSetCmndBreakpoint(name="set_cmnd", log=__heaplens_log__))
-
-        # print(DIVIDER)
-        # print("Collecting chunk information")
-        # # 2nd execution: Inspect.
-        # gdb.execute(f"r {crash_payload}")
-
-        # self.cleanup(self.vul_bkps)
-
-        # # Re-enable gef output
-        # gdb.execute("gef config context.enable True")
-
-
-# Instantiates the class (register the command)
-HeaplensCrashSudo()
 
 
 class HeaplensClear(HeaplensCommand):
@@ -572,9 +509,7 @@ cmds = [
 
     # "file tests/env-in-heap",
     # "list-env-in-heap -b breakme",
-    # "heaplens-crash-sudo -s A -r 65535",
-
-    # "heaplens test.txt",
+    "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     # "q",
 ]
 for cmd in cmds:
