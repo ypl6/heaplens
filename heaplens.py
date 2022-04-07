@@ -20,7 +20,7 @@ set solib-search-path /lib/sudo
 (gdb) list-env-in-heap
     ...
     ...
-    Possible envirnoment variables to fuzz:
+    Possible environment variables to fuzz:
         LC_ALL
         TZ
         ...
@@ -154,14 +154,14 @@ class AllocFunction(gdb.Breakpoint):
 
 
 class ListEnvInHeap(HeaplensCommand):
-    """List envirnoment variables that might affect the heap layout."""
+    """List environment variables that might affect the heap layout."""
 
     def __init__(self):
         super(ListEnvInHeap, self).__init__(
             "list-env-in-heap", gdb.COMMAND_USER)
 
     class GetEnvBreakpoint(gdb.Breakpoint):
-        """Log envirnoment variable name at breakpoint."""
+        """Log environment variable name at breakpoint."""
 
         def __init__(self, name, log, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
@@ -180,7 +180,7 @@ class ListEnvInHeap(HeaplensCommand):
             return False
 
     class FreeBreakpoint(gdb.Breakpoint):
-        """Log envirnoment variable that contains 'FuzzMe{number}' at breakpoint."""
+        """Log environment variable that contains 'FuzzMe{number}' at breakpoint."""
 
         def __init__(self, name, log, cmd_args, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
@@ -205,17 +205,17 @@ class ListEnvInHeap(HeaplensCommand):
 
     def parse_args(self, args):
         parser = argparse.ArgumentParser(
-            description="List envirnoment variables that might affect the heap layout.")
+            description="List environment variables that might affect the heap layout.")
         parser.add_argument("-v", "--verbose", action="store_true",
                             help="increase output verbosity")
         parser.add_argument("--prefix", type=str,
-                            help="envirnoment variable value prefix")
+                            help="environment variable value prefix")
         parser.add_argument("--suffix", type=str,
-                            help="envirnoment variable value suffix")
+                            help="environment variable value suffix")
         parser.add_argument("-b", "--breakpoint", type=str,
                             help="stop the executions here (execute br {breakpoint} in gdb)")
         parser.add_argument("-s", "--skip", type=str,
-                            help="skip this envirnoment variable")
+                            help="skip this environment variable")
 
         if not args:
             return None, None
@@ -242,7 +242,7 @@ class ListEnvInHeap(HeaplensCommand):
 
         self.log = {'env': [], 'fuzzable': [], 'env_value': {}}
 
-        # 1st execution: Get envirnoment variables used
+        # 1st execution: Get environment variables used
         self.getenv_bkps = []
         self.getenv_bkps.append(
             self.GetEnvBreakpoint(name="getenv", log=self.log))
@@ -250,15 +250,15 @@ class ListEnvInHeap(HeaplensCommand):
         # Run and print result
         gdb.execute(run_cmd)
         print(DIVIDER)
-        print("1st execution. Found following envirnoment varible:")
+        print("1st execution. Found following environment variable:")
         print(self.log['env'])
         print(DIVIDER)
         self.cleanup(self.getenv_bkps)
 
-        # 2nd execution: Filter envirnoment variables appears in heap
+        # 2nd execution: Filter environment variables appears in heap
         # set all env variable to recongizeable string
         skips = args.skip.split(",") if args and args.skip else []
-        print(f"Skipping envirnoment variable: {skips}")
+        print(f"Skipping environment variable: {skips}")
         for i, var_name in enumerate(self.log['env']):
             if var_name in skips:
                 continue
@@ -280,7 +280,7 @@ class ListEnvInHeap(HeaplensCommand):
         # Run and print result
         gdb.execute(run_cmd)
         print(DIVIDER)
-        print("2nd execution. Possible envirnoment variables for heap grooming:")
+        print("2nd execution. Possible environment variables for heap grooming:")
         print(list(set(self.log['fuzzable'])))
         print(DIVIDER)
         self.cleanup(self.free_bkps)
