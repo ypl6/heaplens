@@ -390,18 +390,19 @@ class HeaplensCrashSudo(HeaplensCommand):
 
     class GetSetCmndBreakpoint(gdb.Breakpoint):
 
-        def __init__(self, name, *args, **kwargs):
+        def __init__(self, name, log, *args, **kwargs):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
+            self.log = log
 
         def stop(self):
-            record_updated_chunks()
+            record_updated_chunks(self.log)
             return True
 
     def parse_args(self, args):
         parser = argparse.ArgumentParser(
             description="A tailored command to examine vulnerable sudo's set_cmnd().",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.add_argument("string", metavar="S", type=str, default="A",
+        parser.add_argument("-s", "--string", type=str, default="A",
                             help="the string to send as NewArgv[2]")
         parser.add_argument("-r", "--repeat", type=int, default=65535,
                             help="repeat the payload string for {repeat} times")
@@ -590,7 +591,7 @@ cmds = [
 
     # "file tests/env-in-heap",
     # "list-env-in-heap -b breakme",
-    # "heaplens-crash-sudo -r 65535 A",
+    # "heaplens-crash-sudo -s A -r 65535",
 
     # "heaplens test.txt",
     # "q",

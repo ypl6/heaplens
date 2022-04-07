@@ -26,7 +26,7 @@ def backtrace():
     print("\n", DIVIDER)
 
 
-def record_updated_chunks(log, show_bt):
+def record_updated_chunks(log, show_bt=False):
     addr_re = r'.*addr=(.{14})'
     bins = gdb.execute("heap bins", to_string=True)
     for bin in bins.splitlines():
