@@ -456,22 +456,21 @@ class HeaplensDump(HeaplensCommand):
         parser = argparse.ArgumentParser(
             description="Dump Heaplens logs.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-o", "--output", type=str,
-                            help="write to file at path {output}")
-        parser.add_argument("-s", "--show", action="store_true",
-                            help="dumps to stdout")
+                            help="(option) write to file at path {output}")
 
-        args = parser.parse_args(args.strip().split(" "))
-        return args
+        if args:
+            return parser.parse_args(args.strip().split(" "))
+        else:
+            return parser.parse_args([])
 
     def invoke(self, arg, from_tty):
         # Parse arguments
         args = self.parse_args(arg)
-
         print(DIVIDER)
 
         global __heaplens_log__
         global heaplens_details
-        #args = arg.split(" ")
+
         print("Dumping...")
         if args.output:
             try:
@@ -479,7 +478,7 @@ class HeaplensDump(HeaplensCommand):
                     fo.write(json.dumps(heaplens_details))
             except (IOError, FileNotFoundError):
                 print("Failed to write to a file. Please try again.")
-        elif args.show:
+        else:
             for i, (j, k) in enumerate(heaplens_details.items()):
                 print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
                 print("Printing trace:\n", k['backtrace'])
