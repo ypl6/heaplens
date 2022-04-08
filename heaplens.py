@@ -258,8 +258,10 @@ class Heaplens(HeaplensCommand):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
 
         def stop(self):
-            global __heaplens_log__
-            record_updated_chunks(__heaplens_log__)
+            # global __heaplens_log__
+            # record_updated_chunks(__heaplens_log__)
+
+            # show updated chunk info by executing heap chunks?
             return True
 
     class GetAllocBreakpoint(gdb.Breakpoint):
@@ -325,9 +327,11 @@ class Heaplens(HeaplensCommand):
             rdi = read_register("rdi")
 
             if rdi in heaplens_details:
+                bt = gdb.execute("bt 15", to_string=True)
                 if self.verbose:
                     print(f"Freeing {hex(rdi)}")
-                    gdb.execute("bt 15")
+                    print(bt)
+
                 del heaplens_details[rdi]
 
             return False
@@ -382,14 +386,14 @@ class Heaplens(HeaplensCommand):
                 self.custom_bkps.append(
                     self.GetCustomBreakpoint(name=f"{bkp}"))
 
-        print(f"Hooking free function free...")
-        self.mem_bkps.append(
-            self.GetFreeBreakpoint(name="free", verbose=args.verbose))
+        # print(f"Hooking free function free...")
+        # self.mem_bkps.append(
+        #     self.GetFreeBreakpoint(name="free", verbose=args.verbose))
 
-        for func in ["malloc", "realloc", "calloc"]:
-            print(f"Hooking {func} function...")
-            self.mem_bkps.append(
-                self.GetAllocBreakpoint(name=func, verbose=args.verbose))
+        # for func in ["malloc", "realloc", "calloc"]:
+        #     print(f"Hooking {func} function...")
+        #     self.mem_bkps.append(
+        #         self.GetAllocBreakpoint(name=func, verbose=args.verbose))
 
         print(f"Running {run_args}..." if run_args else "Running...")
         gdb.execute(f"r {run_args}" if run_args else "r")
@@ -423,23 +427,25 @@ class HeaplensClear(HeaplensCommand):
 HeaplensClear()
 
 
-class HeaplensAddr(HeaplensCommand):
-    """Print recorded addresses of free chunks."""
+class HeaplensChunks(HeaplensCommand):
+    """An extended `heap chunks` that integrates info about free chunks from `heap bins`"""
 
     def __init__(self):
-        super().__init__("heaplens-addr", gdb.COMMAND_USER)
+        super().__init__("heaplens-chunks", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
         global __heaplens_log__
-        print("Showing logged addresses of free chunks:")
+        record_updated_chunks(__heaplens_log__)
+
+        print("Showing current heap info with freed chunks:")
         try:
-            print("\n".join(__heaplens_log__['bins']))
+            print("\n".join(__heaplens_log__['chunks']))
         except KeyError:
             print("Nothing to print")
 
 
 # Instantiates the class (register the command)
-HeaplensAddr()
+HeaplensChunks()
 
 
 class HeaplensDump(HeaplensCommand):

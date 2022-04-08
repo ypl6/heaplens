@@ -6,13 +6,6 @@ def escape_ansi(line):
     ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
     return ansi_escape.sub('', line)
 
-
-# def verboseprint(verbose=True, *args, **kwargs):
-#     if verbose:
-#         print(*args, **kwargs)
-#     else:
-#         return None
-
 # def int_to_string(n):
 #     """Convert int to string. (Not used, not debug-ed)"""
 #     # return str(binascii.unhexlify(hex(int(n))[2:]))
@@ -46,6 +39,6 @@ def record_updated_chunks(log):
         addr = "".join(re.findall(addr_re, chunk))
         if addr in log['bins']:
             log['chunks'].append(
-                chunk + "  ←  free chunk")
+                chunk + "\033[0;34m  ←  free chunk\033[0m")
         else:
             log['chunks'].append(chunk)
