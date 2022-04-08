@@ -223,7 +223,7 @@ __heaplens_log__ = {'bins': [], 'chunks': []}
 class GetRetBreakpoint(gdb.Breakpoint):
     def __init__(self, name, fname, alloc, verbose):
         super().__init__(
-            name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
+            name, gdb.BP_BREAKPOINT, internal=True, temporary=True)
         self.name = name
         self.fname = fname
         self.trigger = False
@@ -237,15 +237,14 @@ class GetRetBreakpoint(gdb.Breakpoint):
             print(f"{self.fname} returns {hex(ret_address)}")
 
         bt = gdb.execute("bt", to_string=True)
-        bt15 = gdb.execute("bt 15", to_string=True)
 
         heaplens_details[ret_address] = {}
         heaplens_details[ret_address]['backtrace'] = bt
         heaplens_details[ret_address]['size'] = self.alloc_size
 
         if self.verbose:
-            print(bt15)
-            print("\n", DIVIDER)
+            gdb.execute("bt 15")
+            print("\n" + DIVIDER)
 
         self.trigger = True
         return False
