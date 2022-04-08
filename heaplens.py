@@ -28,11 +28,6 @@ def escape_ansi(line):
     ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
     return ansi_escape.sub('', line)
 
-# def int_to_string(n):
-#     """Convert int to string. (Not used, not debug-ed)"""
-#     # return str(binascii.unhexlify(hex(int(n))[2:]))
-#     return bytes.fromhex(hex(int(n))[2:]).decode("ASCII")[::-1]
-
 
 def stoi(s):
     # might be broken
@@ -268,6 +263,7 @@ class Heaplens(HeaplensCommand):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False, temporary=True)
 
         def stop(self):
+            # do not interfere
             return False
 
     class GetCustomBreakpoint(gdb.Breakpoint):
@@ -397,9 +393,7 @@ class Heaplens(HeaplensCommand):
         # Break at main and run with no command once to make sure free/alloc can be hooked
         main_bkp = self.GetMainBreakpoint(name="main")
         gdb.execute("r")
-        gdb.execute("info b")
         main_bkp.delete()
-        gdb.execute("info b")
 
         # Add custom breakpoints & memory-allocation-related breakpoints
         self.custom_bkps = []
