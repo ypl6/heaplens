@@ -18,7 +18,7 @@ from utils import *
 
 """
 Commands
-list-env-in-heap
+heaplens-list-env
 heaplens
 heaplens-clear
 heaplens-write
@@ -505,7 +505,7 @@ cmds = [
     # "heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
 
     # "file tests/env-in-heap",
-    # "list-env-in-heap -b breakme",
+    # "heaplens-list-env -b breakme",
     "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     # "q",
 ]
