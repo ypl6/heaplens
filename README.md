@@ -57,8 +57,18 @@ sudoedit: /: not a regular file # sudo is vulnerable
 ```
 
 ## 💡 Usage
-### How to Enable the Plugin
 
+**TODO**: copy high-level descriptions here
+
+- `heaplens`
+- `heaplens-dump`
+- `heaplens-list-env`
+- `heaplens-chunks`
+- `heaplens-clear`
+
+As of now, help menus are provided for commands `heaplens`, `heaplens-dump` and `heaplens-list-env`. Access them via `<command> -h` in GDB.
+
+## 📝 Loading the Plugin
 #### Option 1
 Start gef
 ```
@@ -73,18 +83,6 @@ Add this in `.gdbinit`:
 ```
 source <path to>/heaplens/heaplens.py
 ```
-
-### Using the Plugin
-
-## 📝 List of Commands
-
-- `heaplens`
-- `heaplens-dump`
-- `heaplens-list-env`
-- `heaplens-chunks`
-- `heaplens-clear`
-
-As of now, help menus are provided for commands `heaplens`, `heaplens-dump` and `heaplens-list-env`. Access them via `<command> -h` in GDB.
 
 ## 🛠 Test Cases
 
