@@ -38,7 +38,6 @@ def record_updated_chunks(log):
     for chunk in chunks.splitlines():
         addr = "".join(re.findall(addr_re, chunk))
         if addr in log['bins']:
-            log['chunks'].append(
-                chunk + "\033[0;34m  ←  free chunk\033[0m")
+            log['chunks'][addr] = chunk + "\033[0;34m  ←  free chunk\033[0m"
         else:
-            log['chunks'].append(chunk)
+            log['chunks'][addr] = chunk
