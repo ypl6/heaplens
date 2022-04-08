@@ -98,7 +98,7 @@ $ make all
 ```
 gef➤  file tests/heap-dump
 gef➤  heaplens -b breakme
-gef➤  heaplens-dumps
+gef➤  heaplens-dump
 ```
 
 ### Dump `sudoedit` heap layout to output.txt
@@ -106,7 +106,7 @@ gef➤  heaplens-dumps
 ```
 gef➤  file sudoedit
 gef➤  heaplens -b set_cmnd -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-gef➤  heaplens-dumps output.txt
+gef➤  heaplens-dump output.txt
 ```
 
 output.txt
