@@ -5,7 +5,24 @@ CMPT733 Cybersecurity Lab II Project
 
 ## 📂 Repo Structure
 
-::TODO::
+```
+.
+├── README.md
+├── heaplens.png
+├── heaplens.py
+├── logs
+│   ├── sudoedit-#.txt
+│   └── ...
+└── tests
+    ├── Makefile
+    ├── env-in-heap
+    └── ...
+```
+
+- `README.md`: right here!
+- `heaplens.py`: the main script
+- `logs/`: contains some sample logs we captured during development and testing
+- `tests/`: contains some binaries (and their source codes) for testing
 
 ## 📦 Environment
 
@@ -58,6 +75,16 @@ source <path to>/heaplens/heaplens.py
 ```
 
 ### Using the Plugin
+
+## 📝 List of Commands
+
+- `heaplens`
+- `heaplens-dump`
+- `heaplens-list-env`
+- `heaplens-chunks`
+- `heaplens-clear`
+
+As of now, help menus are provided for commands `heaplens`, `heaplens-dump` and `heaplens-list-env`. Access them via `<command> -h` in GDB.
 
 ## 🛠 Test Cases
 
