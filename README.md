@@ -16,7 +16,6 @@ Here is a list of things (and versions) we used to test the exploit. **They shou
 - Ubuntu 20.04.4 (64-bit)
 - `python` 3.8.10
 - `glibc` 2.34
-<!-- - `gcc` -->
 - `gdb` 9.2
 - `gef` 2022.01
   - If `gef` is not enabled under root, take a look at `/root/.gdbinit`
