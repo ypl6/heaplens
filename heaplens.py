@@ -449,7 +449,8 @@ class HeaplensDump(HeaplensCommand):
 
     def parse_args(self, args):
         parser = argparse.ArgumentParser(
-            description="Dump Heaplens logs.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+            description="Dump Heaplens logs. Writes to stdout by default.", 
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-o", "--output", type=str,
                             help="write to file at path {output}")
 
