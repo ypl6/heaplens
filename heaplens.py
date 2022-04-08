@@ -60,12 +60,12 @@ class HeaplensCommand(gdb.Command):
             bp.delete()
 
 
-class ListEnvInHeap(HeaplensCommand):
+class HeaplensListEnv(HeaplensCommand):
     """List environment variables that might affect the heap layout."""
 
     def __init__(self):
-        super(ListEnvInHeap, self).__init__(
-            "list-env-in-heap", gdb.COMMAND_USER)
+        super(HeaplensListEnv, self).__init__(
+            "heaplens-list-env", gdb.COMMAND_USER)
 
     class GetEnvBreakpoint(gdb.Breakpoint):
         """Log environment variable name at breakpoint."""
@@ -197,7 +197,7 @@ class ListEnvInHeap(HeaplensCommand):
 
 
 # Instantiates the class (register the command)
-ListEnvInHeap()
+HeaplensListEnv()
 
 __heaplens_log__ = {'bins': [], 'chunks': []}
 
@@ -502,7 +502,7 @@ HeaplensDump()
 # Debug: auto run command on gdb startup
 cmds = [
     "file sudoedit",
-    # "list-env-in-heap -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    # "heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
 
     # "file tests/env-in-heap",
     # "list-env-in-heap -b breakme",
