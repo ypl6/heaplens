@@ -221,6 +221,7 @@ class GetRetBreakpoint(gdb.Breakpoint):
         bt = gdb.execute("bt", to_string=True)
 
         heaplens_details[ret_address] = {}
+        heaplens_details[ret_address]['source'] = self.fname
         heaplens_details[ret_address]['backtrace'] = bt
         heaplens_details[ret_address]['size'] = self.alloc_size
 
@@ -447,12 +448,22 @@ class HeaplensDump(HeaplensCommand):
     def __init__(self):
         super().__init__("heaplens-dump", gdb.COMMAND_USER)
 
+    def __get_dump_content__(self, log):
+        content = ""
+        for i, (addr, info) in enumerate(log.items()):
+            content += f"[{info['source']}] Chunk {i} @ {hex(addr)} | size {hex(info['size'])}\n"
+            content += "Printing trace:\n"
+            content += info['backtrace'] + "\n"
+        return content
+
     def parse_args(self, args):
         parser = argparse.ArgumentParser(
-            description="Dump Heaplens logs. Writes to stdout by default.", 
+            description="Dump Heaplens logs. Writes to stdout by default.",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-o", "--output", type=str,
                             help="write to file at path {output}")
+        parser.add_argument("--json", action="store_true",
+                            help="dump in json")
 
         if args:
             return parser.parse_args(args.strip().split(" "))
@@ -460,10 +471,9 @@ class HeaplensDump(HeaplensCommand):
             return parser.parse_args([])
 
     def invoke(self, arg, from_tty):
-       
         global __heaplens_log__
         global heaplens_details
-        
+
         # Parse arguments
         args = {}
         try:
@@ -471,28 +481,25 @@ class HeaplensDump(HeaplensCommand):
         except RuntimeWarning:
             pass
 
-        try:
-            if args.output:
-                try:
-                    print("Dumping to file...")
-                    with open(args.output, "w") as fo:
+        if arg and args.output:
+            print("Dumping to file...")
+            try:
+                with open(args.output, "w") as fo:
+                    if args.json:
                         fo.write(json.dumps(heaplens_details))
-                    print("Dump complete.")
-                except (IOError, FileNotFoundError):
-                    print("Failed to write to a file. Please try again.")
-            else:
-                print(DIVIDER)
-                print("Dumping...")
-                print(DIVIDER)
-                for i, (j, k) in enumerate(heaplens_details.items()):
-                    print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
-                    print("Printing trace:\n", k['backtrace'])
-                
-                print("Dump complete.")
-                print(DIVIDER)
-                    
-        except AttributeError:
-            pass
+                    else:
+                        fo.write(self.__get_dump_content__(
+                            log=heaplens_details))
+            except (IOError, FileNotFoundError):
+                print("Failed to write to a file. Please try again.")
+            print("Dump complete.")
+        else:
+            print(DIVIDER)
+            print("Dumping...")
+            print(DIVIDER)
+            print(self.__get_dump_content__(log=heaplens_details))
+            print("Dump complete.")
+            print(DIVIDER)
 
 
 # Instantiates the class (register the command)
