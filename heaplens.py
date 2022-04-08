@@ -33,23 +33,6 @@ DIVIDER = "-" * 100
 heaplens_details = {}
 
 
-class HelloWorld(gdb.Command):
-    """Greet the whole world."""
-
-    def __init__(self):
-        super().__init__("hello-world", gdb.COMMAND_USER)
-
-    def invoke(self, arg, from_tty):
-        result = gdb.execute("disas main", to_string=True)
-        print("Writing from python:\n" + result[0:70])
-        print("Hello, World!")
-        # gdb.execute
-
-
-# Instantiates the class (register the command)
-HelloWorld()
-
-
 class HeaplensCommand(gdb.Command):
     """Class to provide common methods. Not to be instantiated."""
 
