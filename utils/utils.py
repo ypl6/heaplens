@@ -33,11 +33,12 @@ def record_updated_chunks(log):
         # address length is 14
         addr = "".join(re.findall(addr_re, bin))
         if addr:
-            log['bins'].append(addr)
+            log['free'][addr] = {}
     chunks = gdb.execute("heap chunks", to_string=True)
     for chunk in chunks.splitlines():
         addr = "".join(re.findall(addr_re, chunk))
-        if addr in log['bins']:
-            log['chunks'][addr] = chunk + "\033[0;34m  ←  free chunk\033[0m"
+        if addr in log['free'].keys():
+            log['chunks'][addr] = chunk + \
+                "\033[0;34m  ←  free chunk\033[0m"
         else:
             log['chunks'][addr] = chunk

@@ -29,7 +29,7 @@ heaplens-dump
 
 
 DIVIDER = "-" * 100
-__chunks_log__ = {'bins': [], 'chunks': {}}
+__chunks_log__ = {'free': {}, 'chunks': {}}
 __heaplens_log__ = {}
 
 
@@ -312,23 +312,30 @@ class Heaplens(HeaplensCommand):
     class GetFreeBreakpoint(gdb.Breakpoint):
         """Stop at free function and update log."""
 
-        global __heaplens__log
-
         def __init__(self, name, verbose):
             super().__init__(
                 name, gdb.BP_BREAKPOINT, internal=False)
+            self.name = name
             self.verbose = verbose
 
         def stop(self):
-            rdi = read_register("rdi")
+            global __heaplens__log
+            global __chunks_log__
 
-            if rdi in __heaplens_log__:
-                bt = gdb.execute("bt 15", to_string=True)
+            addr = read_register("rdi")
+            bt = gdb.execute("bt 15", to_string=True)
+
+            __chunks_log__['free'][addr] = {
+                "source": self.name,
+                "backtrace": bt,
+                "size": None,
+            }
+
+            if addr in __heaplens_log__:
                 if self.verbose:
-                    print(f"Freeing {hex(rdi)}")
+                    print(f"Freeing {hex(addr)}")
                     print(bt)
-
-                del __heaplens_log__[rdi]
+                del __heaplens_log__[addr]
 
             return False
 
@@ -349,7 +356,8 @@ class Heaplens(HeaplensCommand):
             args = parser.parse_args(args.strip().split(" "))
             return run_args, args
         elif args.startswith('-- '):  # run args only
-            return args[3:], None
+            default_args = parser.parse_args([])
+            return args[3:], default_args
         else:  # args only
             args = parser.parse_args(args.strip().split(" "))
             return None, args
@@ -414,7 +422,7 @@ class HeaplensClear(HeaplensCommand):
         while answer not in ["Y", "N"]:
             answer = input("Clear Heaplens log [Y/N]? ").upper()
         if answer == "Y":
-            __chunks_log__ = {'bins': [], 'chunks': {}}
+            __chunks_log__ = {'free': {}, 'chunks': {}}
             __heaplens_log__ = {}
             print("Heaplens logs cleared")
 
@@ -435,8 +443,8 @@ class HeaplensChunks(HeaplensCommand):
 
         print("Showing current heap info with freed chunks:")
         try:
-            print(__chunks_log__['chunks'])
-            # print("\n".join(__chunks_log__['chunks']))
+            for _, chunk in __chunks_log__['chunks'].items():
+                print(chunk)
         except KeyError:
             print("Nothing to print")
 
@@ -451,12 +459,17 @@ class HeaplensDump(HeaplensCommand):
     def __init__(self):
         super().__init__("heaplens-dump", gdb.COMMAND_USER)
 
-    def __get_dump_content__(self, log):
+    def __get_dump_content__(self):
+        global __chunks_log__
+        global __heaplens_log__
+        merged = {**__chunks_log__['free'], **__heaplens_log__}
         content = ""
-        for i, (addr, info) in enumerate(log.items()):
-            content += f"[{info['source']}] Chunk {i} @ {hex(addr)} | size {hex(info['size'])}\n"
-            content += "Printing trace:\n"
-            content += info['backtrace'] + "\n"
+        for i, (addr, info) in enumerate(merged.items()):
+            if not info:
+                break
+            size = hex(info['size']) if info['size'] else "-"
+            content += f"[{info['source']}] Chunk {i} @ {hex(addr)} | size {size}\n"
+            content += f"Trace:\n{info['backtrace']}\n"
         return content
 
     def parse_args(self, args):
@@ -475,6 +488,7 @@ class HeaplensDump(HeaplensCommand):
 
     def invoke(self, arg, from_tty):
         global __heaplens_log__
+        global __chunks_log__
 
         # Parse arguments
         args = {}
@@ -490,8 +504,7 @@ class HeaplensDump(HeaplensCommand):
                     if args.json:
                         fo.write(json.dumps(__heaplens_log__))
                     else:
-                        fo.write(self.__get_dump_content__(
-                            log=__heaplens_log__))
+                        fo.write(self.__get_dump_content__())
             except (IOError, FileNotFoundError):
                 print("Failed to write to a file. Please try again.")
             print("Dump complete.")
@@ -499,7 +512,7 @@ class HeaplensDump(HeaplensCommand):
             print(DIVIDER)
             print("Dumping...")
             print(DIVIDER)
-            print(self.__get_dump_content__(log=__heaplens_log__))
+            print(self.__get_dump_content__())
             print("Dump complete.")
             print(DIVIDER)
 
@@ -515,9 +528,8 @@ cmds = [
 
     # "file tests/env-in-heap",
     # "list-env-in-heap -b breakme",
-    "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
-    # "q",
+    # "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
+    "heaplens -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
 ]
 for cmd in cmds:
-    print(cmd)
     gdb.execute(cmd)
