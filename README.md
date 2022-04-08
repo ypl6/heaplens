@@ -1,4 +1,4 @@
-# Heaplens
+# 🔎 Heaplens
 CMPT733 Cybersecurity Lab II Project
 ## 📂 Repo Structure
 
@@ -42,7 +42,7 @@ sudoedit: /: not a regular file # sudo is vulnerable
 #### Option 1
 Start gef
 ```
-gef➤ gef config gef.extra_plugins_dir <path to>/cmpt733-proj-sudo
+gef➤ gef config gef.extra_plugins_dir <path to>/heaplens
 gef➤ gef save
 gef➤ q
 ```
@@ -51,7 +51,7 @@ This should update the file `~/.gef.rc` or `/root/.gef.rc` (under root).
 #### Option 2
 Add this in `.gdbinit`:
 ```
-source <path to>/heaplens.py
+source <path to>/heaplens/heaplens.py
 ```
 
 ### Using the Plugin

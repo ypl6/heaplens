@@ -15,24 +15,6 @@ sys.path.append(heaplens_path + "/utils")
 
 from utils import *
 
-"""
-Goal(?)
-$ gdb sudoedit
-set solib-search-path /lib/sudo
-
-(gdb) list-env-in-heap
-    ...
-    ...
-    Possible environment variables to fuzz:
-        LC_ALL
-        TZ
-        ...
-(gdb) heaplens output.txt
-    Successfully write to output.txt
-(gdb)
-
-"""
-
 
 """
 Commands
@@ -280,7 +262,7 @@ class Heaplens(HeaplensCommand):
             return True
 
     class GetAllocBreakpoint(gdb.Breakpoint):
-        """TODO: add description"""
+        """Stop at allocation functions and update log."""
 
         def __init__(self, name, verbose):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
@@ -328,35 +310,26 @@ class Heaplens(HeaplensCommand):
             return False
 
     class GetFreeBreakpoint(gdb.Breakpoint):
-        """TODO: add description"""
+        """Stop at free function and update log."""
 
-        def __init__(self, name):
-            super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
+        global __heaplens__log
+        global heaplens_details
+
+        def __init__(self, name, verbose):
+            super().__init__(
+                name, gdb.BP_BREAKPOINT, internal=False)
+            self.verbose = verbose
 
         def stop(self):
-            global __heaplens_log__
-            # TODO
+            rdi = read_register("rdi")
+
+            if rdi in heaplens_details:
+                if self.verbose:
+                    print(f"Freeing {hex(rdi)}")
+                    gdb.execute("bt 15")
+                del heaplens_details[rdi]
+
             return False
-            
-    class FreeAFunction(gdb.Breakpoint):
-    	"""TODO: add description"""
-    	
-    	global __heaplens__log
-    	global heaplens_details
-    	
-    	def __init__(self, name):
-    	    super(FreeAFunction, self).__init__(name, gdb.BP_BREAKPOINT, internal=False)
-    	    
-    	def stop(self):
-    	    rdi = read_register("rdi")
-    	    
-    	    if rdi in heaplens_details:
-    	    	print(f"Freeing {hex(rdi)}")
-    	    	backtrace()
-    	    	del heaplens_details[rdi]
-    	    
-    	    return False
-    	    
 
     def parse_args(self, args):
         parser = argparse.ArgumentParser(description="Collect heap info from memory (de)allocation functions.",
@@ -410,7 +383,7 @@ class Heaplens(HeaplensCommand):
 
         print(f"Hooking free function free...")
         self.mem_bkps.append(
-            self.GetFreeBreakpoint(name="free"))
+            self.GetFreeBreakpoint(name="free", verbose=args.verbose))
 
         for func in ["malloc", "realloc", "calloc"]:
             print(f"Hooking {func} function...")
@@ -478,7 +451,7 @@ class HeaplensDump(HeaplensCommand):
         parser = argparse.ArgumentParser(
             description="Dump Heaplens logs.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-o", "--output", type=str,
-                            help="(option) write to file at path {output}")
+                            help="write to file at path {output}")
 
         if args:
             return parser.parse_args(args.strip().split(" "))
