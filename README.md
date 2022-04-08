@@ -61,5 +61,45 @@ source <path to>/heaplens/heaplens.py
 
 ## 🛠 Test Cases
 
+### `heaplens-list-env` on sudoedit (CVE-2021-3156)
+
+```
+gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+...
+
+----------------------------------------------------------------------------------------------------
+1st execution. Found following environment variable:
+['LOCPATH', 'LC_ALL', 'LC_IDENTIFICATION', 'LANG', 'LC_MEASUREMENT', 'LC_TELEPHONE', 'LC_ADDRESS', 'LC_NAME', 'LC_PAPER', 'LC_MESSAGES', 'LC_MONETARY', 'LC_COLLATE', 'LC_TIME', 'LC_NUMERIC', 'LC_CTYPE', 'TZ', 'SHELL', 'LANGUAGE']    
+----------------------------------------------------------------------------------------------------
+
+...
+
+----------------------------------------------------------------------------------------------------
+2nd execution. Possible environment variables for heap grooming:
+['LC_CTYPE', 'LC_PAPER', 'LC_MONETARY', 'TZ', 'LC_ADDRESS', 'LC_MEASUREMENT', 'LC_IDENTIFICATION', 'LC_COLLATE', 'LC_NUMERIC', 'LC_MESSAGES', 'LC_TIME', 'LANGUAGE', 'LC_NAME', 'LOCPATH', 'LC_TELEPHONE']
+---------------------------------------------------------------------------------------------------- 
+```
+
+### `heaplens-list-env` on `tests/env-in-heap`
+
+```
+gef➤  heaplens-list-env
+
+...
+
+----------------------------------------------------------------------------------------------------
+1st execution. Found following environment variable:
+['ENV_IN_HEAP']
+----------------------------------------------------------------------------------------------------
+
+...
+
+----------------------------------------------------------------------------------------------------
+2nd execution. Possible environment variables for heap grooming:
+['ENV_IN_HEAP']
+----------------------------------------------------------------------------------------------------
+```
+
 ## 🚨 Known Issues
 

@@ -18,7 +18,7 @@ from utils import *
 
 """
 Commands
-list-env-in-heap
+heaplens-list-env
 heaplens
 heaplens-clear
 heaplens-write
@@ -33,23 +33,6 @@ __chunks_log__ = {'free': {}, 'chunks': {}}
 __heaplens_log__ = {}
 
 
-class HelloWorld(gdb.Command):
-    """Greet the whole world."""
-
-    def __init__(self):
-        super().__init__("hello-world", gdb.COMMAND_USER)
-
-    def invoke(self, arg, from_tty):
-        result = gdb.execute("disas main", to_string=True)
-        print("Writing from python:\n" + result[0:70])
-        print("Hello, World!")
-        # gdb.execute
-
-
-# Instantiates the class (register the command)
-HelloWorld()
-
-
 class HeaplensCommand(gdb.Command):
     """Class to provide common methods. Not to be instantiated."""
 
@@ -60,12 +43,12 @@ class HeaplensCommand(gdb.Command):
             bp.delete()
 
 
-class ListEnvInHeap(HeaplensCommand):
+class HeaplensListEnv(HeaplensCommand):
     """List environment variables that might affect the heap layout."""
 
     def __init__(self):
-        super(ListEnvInHeap, self).__init__(
-            "list-env-in-heap", gdb.COMMAND_USER)
+        super(HeaplensListEnv, self).__init__(
+            "heaplens-list-env", gdb.COMMAND_USER)
 
     class GetEnvBreakpoint(gdb.Breakpoint):
         """Log environment variable name at breakpoint."""
@@ -140,9 +123,10 @@ class ListEnvInHeap(HeaplensCommand):
         # Parse arguments
         run_args, args = self.parse_args(arg)
         run_cmd = f"r {run_args}" if run_args else "r"
-        print(DIVIDER)
-        print(f" args: {args}\n run_args: {run_args}")
-        print(DIVIDER)
+        if args and args.verbose:
+            print(DIVIDER)
+            print(f" args: {args}\n run_args: {run_args}")
+            print(DIVIDER)
 
         # Disable gef output
         gdb.execute(f"gef config context.enable False", to_string=True)
@@ -197,7 +181,7 @@ class ListEnvInHeap(HeaplensCommand):
 
 
 # Instantiates the class (register the command)
-ListEnvInHeap()
+HeaplensListEnv()
 
 
 class GetRetBreakpoint(gdb.Breakpoint):
@@ -524,12 +508,13 @@ HeaplensDump()
 # Debug: auto run command on gdb startup
 cmds = [
     "file sudoedit",
-    # "list-env-in-heap -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    # "heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
 
     # "file tests/env-in-heap",
-    # "list-env-in-heap -b breakme",
+    # "heaplens-list-env -b breakme",
     # "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     "heaplens -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
+    # "q",
 ]
 for cmd in cmds:
     gdb.execute(cmd)
