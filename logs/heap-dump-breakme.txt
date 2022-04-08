@@ -1,0 +1,21 @@
+[free] Chunk 0 @ 0x0 | size -
+Trace:
+#0  0x00007ffff7fec5f0 in free () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd7808 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd99cd in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fde505 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7feccaa in _dl_catch_exception () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7fde953 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd3064 in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#9  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#10 0x0000000000000001 in ?? ()
+#11 0x00007fffffffe7d7 in ?? ()
+#12 0x0000000000000000 in ?? ()
+
+[free] Chunk 1 @ 0x5555555592c0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x5555555592c0) at malloc.c:3087
+#1  0x00005555555552b8 in main (argc=0x1, argv=0x7fffffffe5a8, envp=0x7fffffffe5b8) at heap-dump.c:23
+

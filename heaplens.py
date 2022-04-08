@@ -2,35 +2,71 @@ from multiprocessing.sharedctypes import Value
 from unicodedata import name
 from xml.dom.minidom import Identified
 import gdb
-import binascii
 import re
 import argparse
 import json
-import sys
-import pathlib
-
-# custom imports in the heaplens dir
-heaplens_path = str(pathlib.Path(__file__).parent.resolve())
-sys.path.append(heaplens_path + "/utils")
-
-from utils import *
-
 
 """
 Commands
-heaplens-list-env
 heaplens
-heaplens-clear
-heaplens-write
-heaplens-addr
 heaplens-dump
-
+heaplens-chunks
+heaplens-clear
+heaplens-list-env
 """
 
-
 DIVIDER = "-" * 100
+# maintains info from `heap chunks` and `heap bins`.
 __chunks_log__ = {'free': {}, 'chunks': {}}
+# maintains real-time info about heap layout.
 __heaplens_log__ = {}
+
+# ========================================== UTILS
+
+
+def escape_ansi(line):
+    ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
+    return ansi_escape.sub('', line)
+
+# def int_to_string(n):
+#     """Convert int to string. (Not used, not debug-ed)"""
+#     # return str(binascii.unhexlify(hex(int(n))[2:]))
+#     return bytes.fromhex(hex(int(n))[2:]).decode("ASCII")[::-1]
+
+
+def stoi(s):
+    # might be broken
+    # this is a program intended for 64-bit machines so pointer sizes are 64 bits
+    r = int(s) & 0xffffffffffffffff
+    return r
+
+
+def read_register(register):
+    val = gdb.parse_and_eval("${}".format(register))
+    s_val = stoi(val)
+    return s_val
+
+
+def record_updated_chunks(log):
+    addr_re = r'.*addr=(.{14})'
+    bins = gdb.execute("heap bins", to_string=True)
+    for bin in bins.splitlines():
+        # Example: Chunk(addr=0x56206612bd30, size=0x12d0, flags=PREV_INUSE)
+        # address length is 14
+        addr = "".join(re.findall(addr_re, bin))
+        if addr:
+            log['free'][addr] = {}
+    chunks = gdb.execute("heap chunks", to_string=True)
+    for chunk in chunks:
+        addr = "".join(re.findall(addr_re, chunk))
+        if addr in log['free'].keys():
+            log['chunks'][addr] = chunk + \
+                "\033[0;34m  ←  free chunk\033[0m"
+        else:
+            log['chunks'][addr] = chunk
+
+
+# ========================================== HEAPLENS
 
 
 class HeaplensCommand(gdb.Command):
@@ -38,7 +74,7 @@ class HeaplensCommand(gdb.Command):
 
     def cleanup(self, bkps, tag=""):
         print("Removing breakpoints" +
-              (f'from {tag}...' if tag != '' else '...'))
+              (f' from {tag}...' if tag != '' else '...'))
         for bp in bkps:
             bp.delete()
 
@@ -361,7 +397,9 @@ class Heaplens(HeaplensCommand):
         # Break at main and run with no command once to make sure free/alloc can be hooked
         main_bkp = self.GetMainBreakpoint(name="main")
         gdb.execute("r")
+        gdb.execute("info b")
         main_bkp.delete()
+        gdb.execute("info b")
 
         # Add custom breakpoints & memory-allocation-related breakpoints
         self.custom_bkps = []
@@ -395,7 +433,7 @@ Heaplens()
 
 
 class HeaplensClear(HeaplensCommand):
-    """Clear heaplens logs."""
+    """Clear Heaplens logs."""
 
     def __init__(self):
         super().__init__("heaplens-clear", gdb.COMMAND_USER)

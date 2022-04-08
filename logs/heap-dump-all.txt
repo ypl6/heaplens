@@ -1,0 +1,268 @@
+[free] Chunk 0 @ 0x0 | size -
+Trace:
+#0  0x00007ffff7fec5f0 in free () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd7808 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd99cd in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fde505 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7feccaa in _dl_catch_exception () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7fde953 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd3064 in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#9  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#10 0x0000000000000001 in ?? ()
+#11 0x00007fffffffe7d7 in ?? ()
+#12 0x0000000000000000 in ?? ()
+
+[free] Chunk 1 @ 0x5555555592c0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x5555555592c0) at malloc.c:3087
+#1  0x00005555555552b8 in main (argc=0x1, argv=0x7fffffffe5a8, envp=0x7fffffffe5b8) at heap-dump.c:23
+
+[malloc] Chunk 2 @ 0x7ffff7ffe190 | size 0x5a1
+Trace:
+#0  0x00007ffff7fdc274 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd1d2f in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x0000000000000001 in ?? ()
+#6  0x00007fffffffe7d7 in ?? ()
+#7  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 3 @ 0x7ffff7ffe740 | size 0x4a1
+Trace:
+#0  0x00007ffff7fdc274 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd20fb in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x0000000000000001 in ?? ()
+#6  0x00007fffffffe7d7 in ?? ()
+#7  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 4 @ 0x7ffff7ffebf0 | size 0x10
+Trace:
+#0  0x00007ffff7fd24ee in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x0000000000000001 in ?? ()
+#5  0x00007fffffffe7d7 in ?? ()
+#6  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 5 @ 0x7ffff7ffec00 | size 0x9e
+Trace:
+#0  0x00007ffff7fdfbcc in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd908a in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd2e6e in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x0000000000000001 in ?? ()
+#7  0x00007fffffffe7d7 in ?? ()
+#8  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 6 @ 0x7ffff7ffeca0 | size 0x28
+Trace:
+#0  0x00007ffff7fd909b in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd2e6e in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x0000000000000001 in ?? ()
+#6  0x00007fffffffe7d7 in ?? ()
+#7  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 7 @ 0x7ffff7ffecd0 | size 0x140
+Trace:
+#0  0x00007ffff7fd90e9 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd2e6e in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x0000000000000001 in ?? ()
+#6  0x00007fffffffe7d7 in ?? ()
+#7  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 8 @ 0x7ffff7ffee10 | size 0x20
+Trace:
+#0  0x00007ffff7fee5cf in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fe8a82 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd998a in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fde505 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7feccaa in _dl_catch_exception () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7fde953 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd3064 in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#9  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#10 0x0000000000000001 in ?? ()
+#11 0x00007fffffffe7d7 in ?? ()
+#12 0x0000000000000000 in ?? ()
+
+[malloc] Chunk 9 @ 0x7ffff7fb8000 | size 0x4aa
+Trace:
+#0  0x00007ffff7fdc274 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd5e97 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd961b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fde505 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7feccaa in _dl_catch_exception () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7fde953 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd3064 in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#9  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#10 0x0000000000000001 in ?? ()
+#11 0x00007fffffffe7d7 in ?? ()
+#12 0x0000000000000000 in ?? ()
+
+[malloc] Chunk 10 @ 0x7ffff7fb84b0 | size 0x20
+Trace:
+#0  0x00007ffff7fdc5a8 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd5e97 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd961b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fde505 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7feccaa in _dl_catch_exception () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7fde953 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd3064 in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#9  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#10 0x0000000000000001 in ?? ()
+#11 0x00007fffffffe7d7 in ?? ()
+#12 0x0000000000000000 in ?? ()
+
+[malloc] Chunk 11 @ 0x7ffff7fb84d0 | size 0x28
+Trace:
+#0  0x00007ffff7fde71f in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd3064 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x0000000000000001 in ?? ()
+#6  0x00007fffffffe7d7 in ?? ()
+#7  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 12 @ 0x7ffff7fb8500 | size 0x38
+Trace:
+#0  0x00007ffff7fdec3a in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd3064 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x0000000000000001 in ?? ()
+#6  0x00007fffffffe7d7 in ?? ()
+#7  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 13 @ 0x7ffff7fb8540 | size 0x48
+Trace:
+#0  0x00007ffff7fe230b in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fe258d in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd0dcc in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fecdb2 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd32d4 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x0000000000000001 in ?? ()
+#9  0x00007fffffffe7d7 in ?? ()
+#10 0x0000000000000000 in ?? ()
+
+[malloc] Chunk 14 @ 0x7ffff7fb8590 | size 0x48
+Trace:
+#0  0x00007ffff7fe230b in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fe258d in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd0dcc in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fecdb2 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd32d4 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x0000000000000001 in ?? ()
+#9  0x00007fffffffe7d7 in ?? ()
+#10 0x0000000000000000 in ?? ()
+
+[malloc] Chunk 15 @ 0x7ffff7fb85e0 | size 0x348
+Trace:
+#0  0x00007ffff7fe230b in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fe258d in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd0dcc in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fecdb2 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd32d4 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x0000000000000001 in ?? ()
+#9  0x00007fffffffe7d7 in ?? ()
+#10 0x0000000000000000 in ?? ()
+
+[malloc] Chunk 16 @ 0x7ffff7fb8930 | size 0x90
+Trace:
+#0  0x00007ffff7fe230b in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fe258d in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd0dcc in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fecdb2 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd32d4 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x0000000000000001 in ?? ()
+#9  0x00007fffffffe7d7 in ?? ()
+#10 0x0000000000000000 in ?? ()
+
+[malloc] Chunk 17 @ 0x7ffff7fb89c0 | size 0x410
+Trace:
+#0  0x00007ffff7fd0c1f in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd4fad in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x0000000000000001 in ?? ()
+#6  0x00007fffffffe7d7 in ?? ()
+#7  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 18 @ 0x7ffff7fb8dd0 | size 0x1088
+Trace:
+#0  0x00007ffff7fe36c0 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd0c9a in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd4fad in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x0000000000000001 in ?? ()
+#7  0x00007fffffffe7d7 in ?? ()
+#8  0x0000000000000000 in ?? ()
+
+[malloc] Chunk 19 @ 0x7ffff7fb9e60 | size 0x110
+Trace:
+#0  0x00007ffff7fe3734 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007ffff7fd0c9a in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007ffff7fd4fad in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007ffff7febc3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x0000000000000001 in ?? ()
+#7  0x00007fffffffe7d7 in ?? ()
+#8  0x0000000000000000 in ?? ()
+
+[realloc] Chunk 20 @ 0x5555555592f0 | size 0x30
+Trace:
+#0  0x00005555555552a8 in main (argc=0x1, argv=0x7fffffffe5a8, envp=0x7fffffffe5b8) at heap-dump.c:22
+
+[malloc] Chunk 21 @ 0x5555555592a0 | size 0x10
+Trace:
+#0  0x00005555555551ff in foo () at heap-dump.c:7
+#1  0x00005555555552c2 in main (argc=0x1, argv=0x7fffffffe5a8, envp=0x7fffffffe5b8) at heap-dump.c:24
+
+[malloc] Chunk 22 @ 0x555555559330 | size 0x400
+Trace:
+#0  0x00007ffff7e47d34 in __GI__IO_file_doallocate (fp=0x7ffff7fb36a0 <_IO_2_1_stdout_>) at filedoalloc.c:101
+#1  0x00007ffff7e57f00 in __GI__IO_doallocbuf (fp=fp@entry=0x7ffff7fb36a0 <_IO_2_1_stdout_>) at libioP.h:948
+#2  0x00007ffff7e56f60 in _IO_new_file_overflow (f=0x7ffff7fb36a0 <_IO_2_1_stdout_>, ch=0xffffffff) at fileops.c:745
+#3  0x00007ffff7e556e5 in _IO_new_file_xsputn (n=0x27, data=<optimized out>, f=<optimized out>) at libioP.h:948
+#4  _IO_new_file_xsputn (f=0x7ffff7fb36a0 <_IO_2_1_stdout_>, data=<optimized out>, n=0x27) at fileops.c:1197
+#5  0x00007ffff7e4a528 in __GI__IO_puts (str=0x555555556008 "Breakpoint at me to check out the heap!") at libioP.h:948
+#6  0x0000555555555230 in breakme () at heap-dump.c:13
+#7  0x00005555555552cc in main (argc=0x1, argv=0x7fffffffe5a8, envp=0x7fffffffe5b8) at heap-dump.c:26
+
