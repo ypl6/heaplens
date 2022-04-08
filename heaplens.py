@@ -481,12 +481,15 @@ class HeaplensDump(HeaplensCommand):
     def __init__(self):
         super().__init__("heaplens-dump", gdb.COMMAND_USER)
 
-    def __get_dump_content__(self):
+    def __get_dump_content__(self, args):
         global __chunks_log__
         global __heaplens_log__
         merged = {**__chunks_log__['free'], **__heaplens_log__}
         content = ""
-        for i, (addr, info) in enumerate(merged.items()):
+        if args.sort:
+            merged = list(merged.items())
+            merged.sort(key=lambda x: x[0])
+        for i, (addr, info) in enumerate(merged):
             if not info:
                 break
             size = hex(info['size']) if info['size'] else "-"
@@ -502,6 +505,8 @@ class HeaplensDump(HeaplensCommand):
                             help="write to file at path {output}")
         parser.add_argument("--json", action="store_true",
                             help="dump in json")
+        parser.add_argument("-s", "--sort", action="store_true",
+                            help="sort the chunks by their addresses")
 
         if args:
             return parser.parse_args(args.strip().split(" "))
@@ -526,7 +531,7 @@ class HeaplensDump(HeaplensCommand):
                     if args.json:
                         fo.write(json.dumps(__heaplens_log__))
                     else:
-                        fo.write(self.__get_dump_content__())
+                        fo.write(self.__get_dump_content__(args))
             except (IOError, FileNotFoundError):
                 print("Failed to write to a file. Please try again.")
             print("Dump complete.")
@@ -534,7 +539,7 @@ class HeaplensDump(HeaplensCommand):
             print(DIVIDER)
             print("Dumping...")
             print(DIVIDER)
-            print(self.__get_dump_content__())
+            print(self.__get_dump_content__(args))
             print("Dump complete.")
             print(DIVIDER)
 
@@ -545,13 +550,13 @@ HeaplensDump()
 
 # Debug: auto run command on gdb startup
 cmds = [
-    "file sudoedit",
+    # "file sudoedit",
     # "heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
 
     # "file tests/env-in-heap",
     # "heaplens-list-env -b breakme",
     # "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
-    "heaplens -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
+    # "heaplens -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     # "q",
 ]
 for cmd in cmds:
