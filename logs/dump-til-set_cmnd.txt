@@ -1,0 +1,707 @@
+[free] Chunk 0 @ 0x7f8236adae40 | size -
+Trace:
+#0  0x00007f8236ac85f0 in free () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007f8236ab4c90 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007f8236ab4f44 in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007f8236ab523c in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007f8236aaee6e in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007f8236ac7c3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007f8236aad04c in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007f8236aac108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#8  0x0000000000000004 in ?? ()
+#9  0x00007ffd05dde7f4 in ?? ()
+#10 0x00007ffd05dde80c in ?? ()
+#11 0x00007ffd05dde80f in ?? ()
+#12 0x00007ffd05dde811 in ?? ()
+#13 0x0000000000000000 in ?? ()
+
+[free] Chunk 1 @ 0x7f8236adae10 | size -
+Trace:
+#0  0x00007f8236ac85f0 in free () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007f8236ab4f4c in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007f8236ab523c in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007f8236aaee6e in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007f8236ac7c3b in ?? () from /lib64/ld-linux-x86-64.so.2
+#5  0x00007f8236aad04c in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007f8236aac108 in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x0000000000000004 in ?? ()
+#8  0x00007ffd05dde7f4 in ?? ()
+#9  0x00007ffd05dde80c in ?? ()
+#10 0x00007ffd05dde80f in ?? ()
+#11 0x00007ffd05dde811 in ?? ()
+#12 0x0000000000000000 in ?? ()
+
+[free] Chunk 2 @ 0x0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x0) at malloc.c:3087
+#1  0x00007f823688fa26 in __GI_setlocale (locale=<optimized out>, category=<optimized out>) at setlocale.c:402
+#2  __GI_setlocale (category=category@entry=0x6, locale=<optimized out>) at setlocale.c:217
+#3  0x00007f823628f270 in sudoers_setlocale (newlocale=0x0, prevlocale=prevlocale@entry=0x0) at ../../../src/plugins/sudoers/locale.c:102
+#4  0x00007f823629af08 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:232
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 3 @ 0x560de44712a0 | size 0xc
+Trace:
+#0  __GI___strdup (s=0x7ffd05dee8ea "en_US.UTF-8") at strdup.c:44
+#1  0x00007f82368913c5 in _nl_load_locale_from_archive (category=category@entry=0xc, namep=namep@entry=0x7ffd05dddbb0) at loadarchive.c:464
+#2  0x00007f82368901fe in _nl_find_locale (locale_path=0x0, locale_path_len=0x0, category=category@entry=0xc, name=name@entry=0x7ffd05dddbb0) at findlocale.c:152
+#3  0x00007f823688f925 in __GI_setlocale (locale=<optimized out>, category=<optimized out>) at setlocale.c:337
+#4  __GI_setlocale (category=<optimized out>, locale=<optimized out>) at setlocale.c:217
+#5  0x0000560de4372965 in main (argc=0x4, argv=0x7ffd05dddef8, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:1430
+
+[malloc] Chunk 4 @ 0x560de4472660 | size 0x14
+Trace:
+#0  0x00007f8236930d19 in __tzstring_len (len=0x3, s=0x560de4473d22 "LMT") at tzset.c:98
+#1  __tzstring (s=0x560de4473d22 "LMT") at tzset.c:121
+#2  0x00007f82369326b1 in __tzfile_read (file=<optimized out>, file@entry=0x7f8236a14929 "/etc/localtime", extra=extra@entry=0x0, extrap=extrap@entry=0x0) at tzfile.c:408
+#3  0x00007f8236931085 in tzset_internal (always=always@entry=0x1) at tzset.c:405
+#4  0x00007f823693190a in __tzset () at tzset.c:551
+#5  0x0000560de4372989 in main (argc=0x4, argv=0x7ffd05dddef8, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:158
+
+[malloc] Chunk 5 @ 0x560de4472480 | size 0x1d8
+Trace:
+#0  __fopen_internal (is32=0x1, mode=0x7f82362bb118 "r", filename=0x7f82362be7b4 "/etc/sudoers") at iofopen.c:67
+#1  _IO_new_fopen (filename=filename@entry=0x7f82362be7b4 "/etc/sudoers", mode=mode@entry=0x7f82362bb118 "r") at iofopen.c:86
+#2  0x00007f823629d31f in open_sudoers (sudoers=0x7f82362be7b4 "/etc/sudoers", doedit=doedit@entry=0x0, keepopen=keepopen@entry=0x0) at ../../../src/plugins/sudoers/sudoers.c:946
+#3  0x00007f82362881f5 in sudo_file_open (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:86
+#4  0x00007f823629aeb4 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:205
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[calloc] Chunk 6 @ 0x560de44723b0 | size 0x38
+Trace:
+#0  0x00007f82362a4835 in new_default (var=0x560de4472250 "env_reset", val=val@entry=0x0, op=<optimized out>) at gram.y:946
+#1  0x00007f82362a63e5 in sudoersparse () at gram.y:250
+#2  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#3  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 7 @ 0x560de4472390 | size 0xc
+Trace:
+#0  __GI___strdup (s=s@entry=0x560de44712a0 "en_US.UTF-8") at strdup.c:44
+#1  0x00007f823688f978 in __GI_setlocale (locale=<optimized out>, category=<optimized out>) at setlocale.c:366
+#2  __GI_setlocale (category=category@entry=0x6, locale=<optimized out>) at setlocale.c:217
+#3  0x00007f823628f270 in sudoers_setlocale (newlocale=0x0, prevlocale=prevlocale@entry=0x0) at ../../../src/plugins/sudoers/locale.c:102
+#4  0x00007f823629af08 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:232
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 8 @ 0x560de4472370 | size 0x10
+Trace:
+#0  0x00007f82362a4eb7 in add_defaults (type=type@entry=0x109, bmem=bmem@entry=0x0, defs=0x560de44723b0) at gram.y:1024
+#1  0x00007f82362a608e in sudoersparse () at gram.y:214
+#2  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#3  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 9 @ 0x560de4472350 | size 0xd
+Trace:
+#0  0x00007f82362b4515 in fill_txt (src=0x560de447b106 "mail_badpass", len=0xc, olen=olen@entry=0x0) at ../../../src/plugins/sudoers/toke_util.c:76
+#1  0x00007f82362b1ec9 in sudoerslex () at toke.l:126
+#2  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#3  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#4  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 10 @ 0x560de4472330 | size 0x10
+Trace:
+#0  0x00007f82362a4eb7 in add_defaults (type=type@entry=0x109, bmem=bmem@entry=0x0, defs=0x560de447f120) at gram.y:1024
+#1  0x00007f82362a608e in sudoersparse () at gram.y:214
+#2  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#3  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 11 @ 0x560de4472310 | size 0xc
+Trace:
+#0  0x00007f82362b4515 in fill_txt (src=0x560de447b11c "secure_path", len=0xb, olen=olen@entry=0x0) at ../../../src/plugins/sudoers/toke_util.c:76
+#1  0x00007f82362b1ec9 in sudoerslex () at toke.l:126
+#2  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#3  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#4  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 12 @ 0x560de44722f0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de44722f0) at malloc.c:3087
+#1  0x00007f823688ff1d in setname (name=0x7f8236a14fd9 <_nl_C_name> "C", category=0x6) at setlocale.c:199
+#2  __GI_setlocale (locale=0x7ffd05dddaa0 "\300\206\244\066\202\177", category=0xd) at setlocale.c:385
+#3  __GI_setlocale (category=category@entry=0x6, locale=locale@entry=0x560de4478570 "C") at setlocale.c:217
+#4  0x00007f823628f19e in sudoers_setlocale (newlocale=newlocale@entry=0x1, prevlocale=prevlocale@entry=0x7ffd05dddb80) at ../../../src/plugins/sudoers/locale.c:120
+#5  0x00007f823629ae2b in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:201
+#6  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#7  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#8  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 13 @ 0x560de44722d0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de44722d0) at malloc.c:3087
+#1  0x00007f823688fef0 in setname (name=0x7f8236a14fd9 <_nl_C_name> "C", category=0x9) at setlocale.c:199
+#2  __GI_setlocale (locale=0x7ffd05dddaa0 "\300\206\244\066\202\177", category=0x9) at setlocale.c:383
+#3  __GI_setlocale (category=category@entry=0x6, locale=locale@entry=0x560de4478570 "C") at setlocale.c:217
+#4  0x00007f823628f19e in sudoers_setlocale (newlocale=newlocale@entry=0x1, prevlocale=prevlocale@entry=0x7ffd05dddb80) at ../../../src/plugins/sudoers/locale.c:120
+#5  0x00007f823629ae2b in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:201
+#6  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#7  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#8  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 14 @ 0x560de44722b0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de44722b0) at malloc.c:3087
+#1  0x00007f823688fef0 in setname (name=0x7f8236a14fd9 <_nl_C_name> "C", category=0x8) at setlocale.c:199
+#2  __GI_setlocale (locale=0x7ffd05dddaa0 "\300\206\244\066\202\177", category=0x8) at setlocale.c:383
+#3  __GI_setlocale (category=category@entry=0x6, locale=locale@entry=0x560de4478570 "C") at setlocale.c:217
+#4  0x00007f823628f19e in sudoers_setlocale (newlocale=newlocale@entry=0x1, prevlocale=prevlocale@entry=0x7ffd05dddb80) at ../../../src/plugins/sudoers/locale.c:120
+#5  0x00007f823629ae2b in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:201
+#6  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#7  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#8  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 15 @ 0x560de4472290 | size 0x48
+Trace:
+#0  sudoers_create_buffer (file=0x560de4472480, size=size@entry=0x4000) at toke.c:3899
+#1  0x00007f82362b15e7 in sudoerslex () at toke.c:2484
+#2  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#3  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#4  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 16 @ 0x560de4472270 | size 0x14
+Trace:
+#0  0x00007f82362ae96f in rcstr_alloc (len=len@entry=0xc) at ../../../src/plugins/sudoers/rcstr.c:75
+#1  0x00007f82362ae9f7 in rcstr_dup (src=0x7f82362be7b4 "/etc/sudoers") at ../../../src/plugins/sudoers/rcstr.c:62
+#2  0x00007f82362a5710 in init_parser (path=<optimized out>, quiet=quiet@entry=0x0, strict=strict@entry=0x0) at gram.y:1303
+#3  0x00007f823629ae4a in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:203
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 17 @ 0x560de4472250 | size 0xa
+Trace:
+#0  0x00007f82362b4515 in fill_txt (src=0x560de447b0f3 "env_reset", len=0x9, olen=olen@entry=0x0) at ../../../src/plugins/sudoers/toke_util.c:76
+#1  0x00007f82362b1ec9 in sudoerslex () at toke.l:126
+#2  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#3  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#4  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 18 @ 0x560de44723d0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de44723d0) at malloc.c:3087
+#1  0x00007f823688fef0 in setname (name=0x7f8236a14fd9 <_nl_C_name> "C", category=0xa) at setlocale.c:199
+#2  __GI_setlocale (locale=0x7ffd05dddaa0 "\300\206\244\066\202\177", category=0xa) at setlocale.c:383
+#3  __GI_setlocale (category=category@entry=0x6, locale=locale@entry=0x560de4478570 "C") at setlocale.c:217
+#4  0x00007f823628f19e in sudoers_setlocale (newlocale=newlocale@entry=0x1, prevlocale=prevlocale@entry=0x7ffd05dddb80) at ../../../src/plugins/sudoers/locale.c:120
+#5  0x00007f823629ae2b in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:201
+#6  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#7  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#8  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 19 @ 0x560de4472700 | size 0x10
+Trace:
+#0  0x00007f82369a2a1f in nss_parse_file (fname=0x7f8236a16727 "/etc/nsswitch.conf") at nsswitch.c:559
+#1  __GI___nss_database_lookup2 (database=database@entry=0x7f8236a1673a "passwd", alternate_name=alternate_name@entry=0x0, defconfig=defconfig@entry=0x7f8236a19690 "compat [NOTFOUND=return] files", ni=0x7f8236a4fa58 <__nss_passwd_database>) at nsswitch.c:135
+#2  0x00007f82369a4c1c in __GI___nss_passwd_lookup2 (ni=ni@entry=0x7ffd05ddcb78, fct_name=fct_name@entry=0x7f8236a14a8f "getpwuid_r", fct2_name=fct2_name@entry=0x0, fctp=fctp@entry=0x7ffd05ddcb80) at XXX-lookup.c:66
+#3  0x00007f82369414fb in __getpwuid_r (uid=uid@entry=0x0, resbuf=resbuf@entry=0x7f8236a4e4a0 <resbuf>, buffer=0x560de4472830 "\360\301\244\066\202\177", buflen=buflen@entry=0x400, result=result@entry=0x7ffd05ddcbd0) at ../nss/getXXbyYY_r.c:269
+#4  0x00007f82369409fb in getpwuid (uid=0x0) at ../nss/getXXbyYY.c:134
+#5  0x0000560de438352a in get_user_info (ud=0x560de4393720 <user_details>) at ../../src/src/sudo.c:533
+#6  0x0000560de4372a1d in main (argc=0x4, argv=0x7ffd05dddef8, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:191
+
+[malloc] Chunk 20 @ 0x560de4472c40 | size 0x78
+Trace:
+#0  0x00007f8236abac3a in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007f8236ac0da0 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007f82369bf838 in __GI__dl_catch_exception (exception=<optimized out>, operate=<optimized out>, args=<optimized out>) at dl-error-skeleton.c:208
+#3  0x00007f8236ac05fa in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007f823685a34c in dlopen_doit (a=a@entry=0x7ffd05ddcae0) at dlopen.c:66
+#5  0x00007f82369bf838 in __GI__dl_catch_exception (exception=exception@entry=0x7ffd05ddca80, operate=<optimized out>, args=<optimized out>) at dl-error-skeleton.c:208
+#6  0x00007f82369bf903 in __GI__dl_catch_error (objname=0x560de4474470, errstring=0x560de4474478, mallocedp=0x560de4474468, operate=<optimized out>, args=<optimized out>) at dl-error-skeleton.c:227
+#7  0x00007f823685ab59 in _dlerror_run (operate=operate@entry=0x7f823685a2f0 <dlopen_doit>, args=args@entry=0x7ffd05ddcae0) at dlerror.c:170
+#8  0x00007f823685a3da in __dlopen (file=file@entry=0x7ffd05ddcbd0 "/usr/local/libexec/sudo/sudoers.so", mode=<optimized out>) at dlopen.c:87
+#9  0x00007f8236a824cd in sudo_dso_load_v1 (path=path@entry=0x7ffd05ddcbd0 "/usr/local/libexec/sudo/sudoers.so", mode=mode@entry=0x5) at ../../../src/lib/util/sudo_dso.c:194
+#10 0x0000560de437ebf3 in sudo_load_plugin (policy_plugin=policy_plugin@entry=0x560de43937a0 <policy_plugin>, info=info@entry=0x560de44743e0, io_plugins=<optimized out>, io_plugins=<optimized out>) at ../../src/src/load_plugins.c:178
+#11 0x0000560de437fe1e in sudo_load_plugins (policy_plugin=0x560de43937a0 <policy_plugin>, io_plugins=0x560de4392010 <io_plugins>) at ../../src/src/load_plugins.c:326
+#12 0x0000560de4372ab3 in main (argc=0x4, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:213
+
+[calloc] Chunk 21 @ 0x560de4473d60 | size 0x4b2
+Trace:
+#0  0x00007f8236ab8274 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007f8236ab1e97 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007f8236ab561b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007f8236ac0d37 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007f82369bf838 in __GI__dl_catch_exception (exception=<optimized out>, operate=<optimized out>, args=<optimized out>) at dl-error-skeleton.c:208
+#5  0x00007f8236ac05fa in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007f82369be7e1 in do_dlopen (ptr=ptr@entry=0x7ffd05ddc9a0) at dl-libc.c:96
+#7  0x00007f82369bf838 in __GI__dl_catch_exception (exception=exception@entry=0x7ffd05ddc940, operate=operate@entry=0x7f82369be7a0 <do_dlopen>, args=args@entry=0x7ffd05ddc9a0) at dl-error-skeleton.c:208
+#8  0x00007f82369bf903 in __GI__dl_catch_error (objname=objname@entry=0x7ffd05ddc990, errstring=errstring@entry=0x7ffd05ddc998, mallocedp=mallocedp@entry=0x7ffd05ddc98f, operate=operate@entry=0x7f82369be7a0 <do_dlopen>, args=args@entry=0x7ffd05ddc9a0) at dl-error-skeleton.c:227
+#9  0x00007f82369be915 in dlerror_run (args=0x7ffd05ddc9a0, operate=0x7f82369be7a0 <do_dlopen>) at dl-libc.c:46
+#10 __GI___libc_dlopen_mode (name=name@entry=0x7ffd05ddc9e0 "libnss_files.so.2", mode=mode@entry=0x80000002) at dl-libc.c:195
+#11 0x00007f82369a25cc in nss_load_library (ni=ni@entry=0x560de4472ce0) at nsswitch.c:359
+#12 0x00007f82369a2e79 in __GI___nss_lookup_function (ni=0x560de4472ce0, fct_name=<optimized out>) at nsswitch.c:467
+#13 0x00007f82369a3031 in __GI___nss_lookup (ni=ni@entry=0x7ffd05ddcb78, fct_name=fct_name@entry=0x7f8236a14a8f "getpwuid_r", fct2_name=fct2_name@entry=0x0, fctp=fctp@entry=0x7ffd05ddcb80) at nsswitch.c:198
+#14 0x00007f82369a4bf7 in __GI___nss_passwd_lookup2 (ni=ni@entry=0x7ffd05ddcb78, fct_name=fct_name@entry=0x7f8236a14a8f "getpwuid_r", fct2_name=fct2_name@entry=0x0, fctp=fctp@entry=0x7ffd05ddcb80) at XXX-lookup.c:66
+#15 0x00007f82369414fb in __getpwuid_r (uid=uid@entry=0x0, resbuf=resbuf@entry=0x7f8236a4e4a0 <resbuf>, buffer=0x560de4472830 "\360\301\244\066\202\177", buflen=buflen@entry=0x400, result=result@entry=0x7ffd05ddcbd0) at ../nss/getXXbyYY_r.c:269
+#16 0x00007f82369409fb in getpwuid (uid=0x0) at ../nss/getXXbyYY.c:134
+#17 0x0000560de438352a in get_user_info (ud=0x560de4393720 <user_details>) at ../../src/src/sudo.c:533
+#18 0x0000560de4372a1d in main (argc=0x4, argv=0x7ffd05dddef8, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:191
+
+[malloc] Chunk 22 @ 0x560de4474220 | size 0x7
+Trace:
+#0  0x00007f82368eac78 in __vasprintf_internal (result_ptr=0x560de4472758, format=<optimized out>, args=args@entry=0x7ffd05ddcb30, mode_flags=<optimized out>) at vasprintf.c:71
+#1  0x00007f823698e6e3 in __asprintf_chk (result_ptr=<optimized out>, flag=<optimized out>, format=<optimized out>) at asprintf_chk.c:34
+#2  0x0000560de43836f0 in asprintf (__fmt=0x560de438bd5d "euid=%u", __ptr=0x560de4472758) at /usr/include/x86_64-linux-gnu/bits/stdio2.h:181
+#3  get_user_info (ud=0x560de4393720 <user_details>) at ../../src/src/sudo.c:570
+#4  0x0000560de4372a1d in main (argc=0x4, argv=0x7ffd05dddef8, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:191
+
+[malloc] Chunk 23 @ 0x560de4473540 | size 0x68
+Trace:
+#0  0x00007f82368978a4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x6, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:145
+#1  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#2  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#3  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#4  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#5  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#6  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#7  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#8  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#9  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 24 @ 0x560de4474330 | size 0x40
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#2  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#3  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#4  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#5  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#6  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#7  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#8  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 25 @ 0x560de44743e0 | size 0x35
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x4, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x6, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#2  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#3  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#4  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#5  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#6  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#7  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#8  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#9  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#10 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 26 @ 0x560de4474e90 | size 0x38
+Trace:
+#0  0x00007f82368978a4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x0, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:145
+#1  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x4, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#2  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x6, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#3  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#4  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#5  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#6  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#7  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#8  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#9  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#10 0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#11 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 27 @ 0x560de4474ed0 | size 0xc8
+Trace:
+#0  0x0000560de4383048 in format_plugin_settings (sudo_settings=0x560de43915c0 <sudo_settings>, plugin=<optimized out>, plugin=<optimized out>) at ../../src/src/sudo.c:1019
+#1  0x0000560de4372af2 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=0x560de43915c0 <sudo_settings>) at ../../src/src/sudo.c:1066
+#2  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 28 @ 0x560de4474fa0 | size 0xb8
+Trace:
+#0  0x0000560de4380221 in get_net_ifs (addrinfo=addrinfo@entry=0x7ffd05dddbd8) at ../../src/src/net_ifs.c:156
+#1  0x0000560de4380950 in parse_args (argc=0x4, argv=0x7ffd05dddef8, nargc=0x7ffd05dddc74, nargv=0x7ffd05dddc78, settingsp=0x7ffd05dddca0, env_addp=0x7ffd05dddc80) at ../../src/src/parse_args.c:275
+#2  0x0000560de4372a55 in main (argc=0x4, argv=0x7ffd05dddef8, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:199
+
+[malloc] Chunk 29 @ 0x560de4475060 | size 0x32
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x0, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x4, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#2  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x6, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#3  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#4  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#5  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#6  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#7  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#8  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#9  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#10 0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#11 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[calloc] Chunk 30 @ 0x560de44750a0 | size 0x4ae
+Trace:
+#0  0x00007f8236ab8274 in ?? () from /lib64/ld-linux-x86-64.so.2
+#1  0x00007f8236ab1e97 in ?? () from /lib64/ld-linux-x86-64.so.2
+#2  0x00007f8236ab561b in ?? () from /lib64/ld-linux-x86-64.so.2
+#3  0x00007f8236aba505 in ?? () from /lib64/ld-linux-x86-64.so.2
+#4  0x00007f82369bf838 in __GI__dl_catch_exception (exception=<optimized out>, operate=<optimized out>, args=<optimized out>) at dl-error-skeleton.c:208
+#5  0x00007f8236aba953 in ?? () from /lib64/ld-linux-x86-64.so.2
+#6  0x00007f8236ac0da0 in ?? () from /lib64/ld-linux-x86-64.so.2
+#7  0x00007f82369bf838 in __GI__dl_catch_exception (exception=<optimized out>, operate=<optimized out>, args=<optimized out>) at dl-error-skeleton.c:208
+#8  0x00007f8236ac05fa in ?? () from /lib64/ld-linux-x86-64.so.2
+#9  0x00007f823685a34c in dlopen_doit (a=a@entry=0x7ffd05ddcae0) at dlopen.c:66
+#10 0x00007f82369bf838 in __GI__dl_catch_exception (exception=exception@entry=0x7ffd05ddca80, operate=<optimized out>, args=<optimized out>) at dl-error-skeleton.c:208
+#11 0x00007f82369bf903 in __GI__dl_catch_error (objname=0x560de4474470, errstring=0x560de4474478, mallocedp=0x560de4474468, operate=<optimized out>, args=<optimized out>) at dl-error-skeleton.c:227
+#12 0x00007f823685ab59 in _dlerror_run (operate=operate@entry=0x7f823685a2f0 <dlopen_doit>, args=args@entry=0x7ffd05ddcae0) at dlerror.c:170
+#13 0x00007f823685a3da in __dlopen (file=file@entry=0x7ffd05ddcbd0 "/usr/local/libexec/sudo/sudoers.so", mode=<optimized out>) at dlopen.c:87
+#14 0x00007f8236a824cd in sudo_dso_load_v1 (path=path@entry=0x7ffd05ddcbd0 "/usr/local/libexec/sudo/sudoers.so", mode=mode@entry=0x5) at ../../../src/lib/util/sudo_dso.c:194
+#15 0x0000560de437ebf3 in sudo_load_plugin (policy_plugin=policy_plugin@entry=0x560de43937a0 <policy_plugin>, info=info@entry=0x560de44743e0, io_plugins=<optimized out>, io_plugins=<optimized out>) at ../../src/src/load_plugins.c:178
+#16 0x0000560de437fe1e in sudo_load_plugins (policy_plugin=0x560de43937a0 <policy_plugin>, io_plugins=0x560de4392010 <io_plugins>) at ../../src/src/load_plugins.c:326
+#17 0x0000560de4372ab3 in main (argc=0x4, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:213
+
+[malloc] Chunk 31 @ 0x560de4474a00 | size 0x12
+Trace:
+#0  0x00007f8236a7cdbc in sudo_new_key_val_v1 (key=0x560de438aad4 "progname", val=0x7ffd05dde803 "sudoedit") at ../../../src/lib/util/key_val.c:53
+#1  0x0000560de43830d6 in format_plugin_settings (sudo_settings=<optimized out>, plugin=<optimized out>, plugin=<optimized out>) at ../../src/src/sudo.c:1029
+#2  0x0000560de4372af2 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=0x560de43915c0 <sudo_settings>) at ../../src/src/sudo.c:1066
+#3  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 32 @ 0x560de44749c0 | size 0xf
+Trace:
+#0  0x00007f8236a7cdbc in sudo_new_key_val_v1 (key=0x560de438aa8b "run_shell", val=0x560de438a8e7 "true") at ../../../src/lib/util/key_val.c:53
+#1  0x0000560de43830d6 in format_plugin_settings (sudo_settings=<optimized out>, plugin=<optimized out>, plugin=<optimized out>) at ../../src/src/sudo.c:1029
+#2  0x0000560de4372af2 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=0x560de43915c0 <sudo_settings>) at ../../src/src/sudo.c:1066
+#3  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 33 @ 0x560de4474440 | size 0xb
+Trace:
+#0  __GI___strdup (s=s@entry=0x560de438a5df "sudoers_io") at strdup.c:44
+#1  0x0000560de437fe64 in sudo_load_plugins (policy_plugin=0x560de43937a0 <policy_plugin>, io_plugins=0x560de4392010 <io_plugins>) at ../../src/src/load_plugins.c:338
+#2  0x0000560de4372ab3 in main (argc=0x4, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:213
+
+[malloc] Chunk 34 @ 0x560de4474de0 | size 0x2f
+Trace:
+#0  0x00007f8236a7cdbc in sudo_new_key_val_v1 (key=0x560de438bcff "plugin_path", val=0x560de4474db0 "/usr/local/libexec/sudo/sudoers.so") at ../../../src/lib/util/key_val.c:53
+#1  0x0000560de4383064 in format_plugin_settings (sudo_settings=0x560de43915c0 <sudo_settings>, plugin=<optimized out>, plugin=<optimized out>) at ../../src/src/sudo.c:1022
+#2  0x0000560de4372af2 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=0x560de43915c0 <sudo_settings>) at ../../src/src/sudo.c:1066
+#3  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 35 @ 0x560de4475cd0 | size 0x12
+Trace:
+#0  __GI___strdup (s=0x7f82362baff4 "Sorry, try again.") at strdup.c:44
+#1  0x00007f82362a3817 in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#2  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#3  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#4  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#5  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 36 @ 0x560de4475ec0 | size 0x38
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x7f8236a13478 "/usr/share/locale-langpack", dirlist_len=0x1b, mask=0x4, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897a4d in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=<optimized out>, mask=0x4, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=<optimized out>, do_allocate=0x1) at ../intl/l10nflist.c:294
+#2  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x6, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#3  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#4  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#5  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#6  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#7  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#8  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#9  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#10 0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#11 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 37 @ 0x560de4475f50 | size 0x38
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x2, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x6, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#2  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#3  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#4  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#5  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#6  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#7  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#8  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#9  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#10 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 38 @ 0x560de4475fe0 | size 0x37
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x1, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x5, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#2  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#3  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#4  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#5  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#6  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#7  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#8  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#9  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#10 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 39 @ 0x560de44760c0 | size 0x3e
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x7f8236a13478 "/usr/share/locale-langpack", dirlist_len=0x1b, mask=0x6, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897a4d in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=<optimized out>, mask=0x6, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=<optimized out>, do_allocate=0x1) at ../intl/l10nflist.c:294
+#2  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#3  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#4  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#5  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#6  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#7  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#8  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#9  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#10 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 40 @ 0x560de4476180 | size 0x3a
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x5, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#2  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#3  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#4  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#5  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#6  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#7  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#8  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#9  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 41 @ 0x560de4476290 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de4476290) at malloc.c:3087
+#1  0x00007f8236897b98 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x7f8236a13478 "/usr/share/locale-langpack", dirlist_len=0x1b, mask=0x0, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:237
+#2  0x00007f8236897a4d in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=<optimized out>, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=<optimized out>, do_allocate=0x1) at ../intl/l10nflist.c:294
+#3  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#4  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#5  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#6  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#7  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#8  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#9  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#10 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 42 @ 0x560de4476370 | size 0x3d
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x7f8236a13478 "/usr/share/locale-langpack", dirlist_len=0x1b, mask=0x5, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897a4d in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=<optimized out>, mask=0x5, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=<optimized out>, do_allocate=0x1) at ../intl/l10nflist.c:294
+#2  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#3  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#4  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#5  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#6  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#7  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#8  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#9  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#10 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 43 @ 0x560de4476430 | size 0x3d
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=0x3, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897ac4 in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=0x18, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:284
+#2  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#3  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#4  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#5  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#6  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#7  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#8  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#9  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 44 @ 0x560de44765b0 | size 0x43
+Trace:
+#0  0x00007f8236897712 in _nl_make_l10nflist (l10nfile_list=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=0x7f8236a13478 "/usr/share/locale-langpack", dirlist_len=0x1b, mask=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", do_allocate=0x1) at ../intl/l10nflist.c:166
+#1  0x00007f8236897a4d in _nl_make_l10nflist (l10nfile_list=l10nfile_list@entry=0x7f8236a4cbf8 <_nl_loaded_domains>, dirlist=dirlist@entry=0x560de44756d0 "/usr/local/share/locale", dirlist_len=<optimized out>, mask=mask@entry=0x7, language=0x7ffd05ddda10 "en", territory=0x7ffd05ddda13 "US", codeset=0x7ffd05ddda16 "UTF-8", normalized_codeset=0x560de4475cd0 "utf8", modifier=0x0, filename=<optimized out>, do_allocate=0x1) at ../intl/l10nflist.c:294
+#2  0x00007f8236895571 in _nl_find_domain (dirname=dirname@entry=0x560de44756d0 "/usr/local/share/locale", locale=locale@entry=0x7ffd05ddda10 "en", domainname=domainname@entry=0x7ffd05ddda30 "LC_MESSAGES/sudoers.mo", domainbinding=domainbinding@entry=0x560de44756a0) at finddomain.c:147
+#3  0x00007f8236894bdf in __dcigettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid1=msgid1@entry=0x7f82362baff4 "Sorry, try again.", msgid2=msgid2@entry=0x0, plural=plural@entry=0x0, n=n@entry=0x0, category=category@entry=0x5) at dcigettext.c:702
+#4  0x00007f8236893a63 in __GI___dcgettext (domainname=domainname@entry=0x7f82362b7173 "sudoers", msgid=msgid@entry=0x7f82362baff4 "Sorry, try again.", category=category@entry=0x5) at dcgettext.c:47
+#5  0x00007f82362a380f in init_defaults () at ../../../src/plugins/sudoers/defaults.c:616
+#6  0x00007f823629aa22 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:177
+#7  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#8  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#9  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 45 @ 0x560de44766b0 | size 0x40
+Trace:
+#0  0x00007f82362881da in sudo_file_open (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:84
+#1  0x00007f823629aeb4 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:205
+#2  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#3  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#4  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 46 @ 0x560de44783a0 | size 0x58
+Trace:
+#0  0x00007f82362aed4c in rbcreate (compar=compar@entry=0x7f82362aa970 <cmp_pwnam>) at ../../../src/plugins/sudoers/redblack.c:94
+#1  0x00007f82362ab10c in sudo_getpwnam (name=0x560de4478480 "root") at ../../../src/plugins/sudoers/pwutil.c:268
+#2  0x00007f823629b16c in init_vars (envp=0x0) at ../../../src/plugins/sudoers/sudoers.c:718
+#3  sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:187
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[calloc] Chunk 47 @ 0x560de44789e0 | size 0x79
+Trace:
+#0  0x00007f82362addcb in sudo_make_pwitem (uid=<optimized out>, name=0x560de4478480 "root") at ../../../src/plugins/sudoers/pwutil_impl.c:120
+#1  0x00007f82362ab09e in sudo_getpwnam (name=0x560de4478480 "root") at ../../../src/plugins/sudoers/pwutil.c:287
+#2  0x00007f823629b16c in init_vars (envp=0x0) at ../../../src/plugins/sudoers/sudoers.c:718
+#3  sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:187
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 48 @ 0x560de4478530 | size 0x10
+Trace:
+#0  0x00007f82362a4eb7 in add_defaults (type=type@entry=0x109, bmem=bmem@entry=0x0, defs=0x560de447f1b0) at gram.y:1024
+#1  0x00007f82362a608e in sudoersparse () at gram.y:214
+#2  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#3  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 49 @ 0x560de447f2b0 | size 0x7
+Trace:
+#0  0x00007f82362b4515 in fill_txt (src=0x560de447b233 "%admin", len=0x6, olen=olen@entry=0x0) at ../../../src/plugins/sudoers/toke_util.c:76
+#1  0x00007f82362b2f52 in sudoerslex () at toke.l:481
+#2  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#3  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#4  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 50 @ 0x560de447f4d0 | size 0x6
+Trace:
+#0  0x00007f82362b4515 in fill_txt (src=0x560de447b27e "%sudo", len=0x5, olen=olen@entry=0x0) at ../../../src/plugins/sudoers/toke_util.c:76
+#1  0x00007f82362b2f52 in sudoerslex () at toke.l:481
+#2  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#3  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#4  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 51 @ 0x560de447f700 | size 0xc
+Trace:
+#0  __GI___strdup (s=s@entry=0x560de44712a0 "en_US.UTF-8") at strdup.c:44
+#1  0x00007f823688f978 in __GI_setlocale (locale=<optimized out>, category=<optimized out>) at setlocale.c:366
+#2  __GI_setlocale (category=category@entry=0x6, locale=<optimized out>) at setlocale.c:217
+#3  0x00007f823628f270 in sudoers_setlocale (newlocale=0x0, prevlocale=prevlocale@entry=0x0) at ../../../src/plugins/sudoers/locale.c:102
+#4  0x00007f823629af08 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:232
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 52 @ 0x560de447faa0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de447faa0) at malloc.c:3087
+#1  0x00007f82368e0ef3 in _IO_deallocate_file (fp=0x560de447faa0) at libioP.h:863
+#2  _IO_new_fclose (fp=0x560de447faa0) at iofclose.c:74
+#3  0x00007f82362b38a9 in pop_include () at toke.l:1040
+#4  sudoerslex () at toke.l:740
+#5  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#6  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#7  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#8  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#9  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#10 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 53 @ 0x560de4487ae0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de4487ae0) at malloc.c:3087
+#1  0x00007f82362b0dd8 in switch_dir (stack=0x560de447f890, dirpath=0x560de447f704 "/etc/sudoers.d") at toke.l:879
+#2  push_include_int (path=path@entry=0x560de447f704 "/etc/sudoers.d", isdir=isdir@entry=0x1) at toke.l:986
+#3  0x00007f82362b26ef in sudoerslex () at toke.l:323
+#4  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#5  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#6  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#7  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#8  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#9  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 54 @ 0x560de4487c20 | size 0xc
+Trace:
+#0  __GI___strdup (s=s@entry=0x560de44712a0 "en_US.UTF-8") at strdup.c:44
+#1  0x00007f823688f978 in __GI_setlocale (locale=<optimized out>, category=<optimized out>) at setlocale.c:366
+#2  __GI_setlocale (category=category@entry=0x6, locale=<optimized out>) at setlocale.c:217
+#3  0x00007f823628f270 in sudoers_setlocale (newlocale=0x0, prevlocale=prevlocale@entry=0x0) at ../../../src/plugins/sudoers/locale.c:102
+#4  0x00007f823629af08 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:232
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 55 @ 0x560de447fc80 | size 0xc
+Trace:
+#0  __GI___strdup (s=s@entry=0x560de44712a0 "en_US.UTF-8") at strdup.c:44
+#1  0x00007f823688f978 in __GI_setlocale (locale=<optimized out>, category=<optimized out>) at setlocale.c:366
+#2  __GI_setlocale (category=category@entry=0x6, locale=<optimized out>) at setlocale.c:217
+#3  0x00007f823628f270 in sudoers_setlocale (newlocale=0x0, prevlocale=prevlocale@entry=0x0) at ../../../src/plugins/sudoers/locale.c:102
+#4  0x00007f823629af08 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:232
+#5  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#6  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#7  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 56 @ 0x560de4480ce0 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de4480ce0) at malloc.c:3087
+#1  0x00007f82362b0647 in sudoersfree (ptr=<optimized out>) at toke.c:4376
+#2  sudoers_delete_buffer (b=0x560de4480c90) at toke.c:3932
+#3  0x00007f82362b173e in pop_include () at toke.l:1039
+#4  sudoerslex () at toke.l:740
+#5  0x00007f82362a5b4d in sudoersparse () at gram.c:1149
+#6  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#7  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#8  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#9  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#10 main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 57 @ 0x560de4480c90 | size 0x47
+Trace:
+#0  __GI___strdup (s=s@entry=0x560de447f160 "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin") at strdup.c:44
+#1  0x00007f82362a2536 in store_str (sd_un=0x7f82362d0888 <sudo_defs_table+2952>, str=0x560de447f160 "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin") at ../../../src/plugins/sudoers/defaults.c:959
+#2  parse_default_entry (def=def@entry=0x7f82362d0860 <sudo_defs_table+2912>, val=val@entry=0x560de447f160 "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin", op=op@entry=0x1, sd_un=sd_un@entry=0x7f82362d0888 <sudo_defs_table+2952>, file=file@entry=0x560de4472274 "/etc/sudoers", lineno=lineno@entry=0xb, quiet=0x0) at ../../../src/plugins/sudoers/defaults.c:310
+#3  0x00007f82362a32b8 in set_default (var=<optimized out>, val=0x560de447f160 "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin", op=0x1, file=0x560de4472274 "/etc/sudoers", lineno=0xb, quiet=quiet@entry=0x0) at ../../../src/plugins/sudoers/defaults.c:416
+#4  0x00007f82362a3bd9 in update_defaults (parse_tree=0x560de44766b8, defs=0x560de44766c8, defs@entry=0x0, what=what@entry=0xf, quiet=quiet@entry=0x0) at ../../../src/plugins/sudoers/defaults.c:794
+#5  0x00007f823629ae8f in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:211
+#6  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#7  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#8  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[malloc] Chunk 58 @ 0x560de4487bf0 | size 0x28
+Trace:
+#0  0x00007f823629b820 in sudoers_policy_main (argc=argc@entry=0x3, argv=argv@entry=0x7ffd05dddf00, pwflag=pwflag@entry=0x0, env_add=env_add@entry=0x0, verbose=verbose@entry=0x0, closure=closure@entry=0x7ffd05dddc10) at ../../../src/plugins/sudoers/sudoers.c:283
+#1  0x00007f823629503a in sudoers_policy_check (argc=0x3, argv=0x7ffd05dddf00, env_add=0x0, command_infop=0x7ffd05dddc88, argv_out=0x7ffd05dddc90, user_env_out=0x7ffd05dddc98) at ../../../src/plugins/sudoers/policy.c:872
+#2  0x0000560de4372c46 in policy_check (plugin=0x560de43937a0 <policy_plugin>, user_env_out=0x7ffd05dddc98, argv_out=0x7ffd05dddc90, command_info=0x7ffd05dddc88, env_add=0x0, argv=0x7ffd05dddf00, argc=0x3) at ../../src/src/sudo.c:1138
+#3  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:253
+
+[free] Chunk 59 @ 0x560de4479b90 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de4479b90) at malloc.c:3087
+#1  0x00007f82362a5efb in sudoersparse () at gram.c:2246
+#2  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#3  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
+[free] Chunk 60 @ 0x560de4479d30 | size -
+Trace:
+#0  __GI___libc_free (mem=0x560de4479d30) at malloc.c:3087
+#1  0x00007f82362a5f0c in sudoersparse () at gram.c:2248
+#2  0x00007f8236287f7b in sudo_file_parse (nss=0x7f82362cf940 <sudo_nss_file>) at ../../../src/plugins/sudoers/file.c:114
+#3  0x00007f823629ae66 in sudoers_policy_init (info=info@entry=0x7ffd05dddc00, envp=envp@entry=0x7ffd05dddf20) at ../../../src/plugins/sudoers/sudoers.c:204
+#4  0x00007f823629553b in sudoers_policy_open (version=<optimized out>, conversation=<optimized out>, plugin_printf=<optimized out>, settings=0x560de4474ed0, user_info=0x560de4472720, envp=0x7ffd05dddf20, args=0x0) at ../../../src/plugins/sudoers/policy.c:797
+#5  0x0000560de4372b42 in policy_open (plugin=0x560de43937a0 <policy_plugin>, user_env=0x7ffd05dddf20, user_info=0x560de4472720, settings=<optimized out>) at ../../src/src/sudo.c:1084
+#6  main (argc=<optimized out>, argv=<optimized out>, envp=0x7ffd05dddf20) at ../../src/src/sudo.c:217
+
