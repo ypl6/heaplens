@@ -11,9 +11,19 @@ CMPT733 Cybersecurity Lab II Project
 
 Here is a list of things (and versions) we used to test the exploit. **They should already be installed in the VM.** In case anything is missing, follow the instruction below.
 
-### `sudo`
+### Dependencies
 
-A binary of the vulnerable `sudo` with debugging enabled is required. A pre-built binary with debug symbols has been installed in the VM.
+- Ubuntu 20.04.4 (64-bit)
+- `python` 3.8.10
+- `glibc` 2.34
+- `gdb` 9.2
+- `gef` 2022.01
+  - If `gef` is not enabled under root, take a look at `/root/.gdbinit`
+  - If the file is empty, just copy what you have in `~/.gdbinit`
+
+### `sudo` Dependencies (for running heaplens on `sudo`)
+
+A binary of `sudo` with debugging enabled is required. A pre-built binary with debug symbols has been installed in the VM.
 
 ```bash
 cyberlab@ubuntu:~$ which sudo
@@ -28,16 +38,6 @@ Sudoers I/O plugin version 1.8.31
 cyberlab@ubuntu:~$ sudoedit -s /
 sudoedit: /: not a regular file # sudo is vulnerable
 ```
-### Other Dependencies
-
-- Ubuntu 20.04.4 (64-bit)
-- `python` 3.8.10
-- `glibc` 2.34
-- `gcc` 9.4.0
-- `gdb` 9.2
-- `gef` 2022.01
-  - If `gef` is not enabled under root, take a look at `/root/.gdbinit`
-  - If the file is empty, just copy what you have in `~/.gdbinit`
 
 ## 💡 Usage
 ### How to Enable the Plugin
@@ -61,9 +61,54 @@ source <path to>/heaplens/heaplens.py
 
 ## 🛠 Test Cases
 
-### `heaplens-list-env` on sudoedit (CVE-2021-3156)
+To bulid the test case scripts (built in the VM)
+
+```bash
+$ cd tests
+$ make all
+```
+
+### Dump `tests/heap-dump` heap layout
 
 ```
+gef➤  file tests/heap-dump
+gef➤  heaplens -b breakme
+gef➤  heaplens-dumps
+```
+
+### Dump `sudoedit` heap layout to output.txt
+
+```
+gef➤  file sudoedit
+gef➤  heaplens -b set_cmnd -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+gef➤  heaplens-dumps output.txt
+```
+
+output.txt
+
+```
+[heap dump]
+```
+
+
+### List envirnoment variables for heap grooming in `tests/env-in-heap`
+
+```
+gef➤  file tests/env-in-heap
+gef➤  heaplens-list-env
+
+...
+
+----------------------------------------------------------------------------------------------------
+2nd execution. Possible environment variables for heap grooming:
+['ENV_IN_HEAP']
+----------------------------------------------------------------------------------------------------
+```
+
+### List envirnoment variables for heap grooming in `sudoedit`
+
+```
+gef➤  file sudoedit
 gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 ...
@@ -79,26 +124,6 @@ gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAA
 2nd execution. Possible environment variables for heap grooming:
 ['LC_CTYPE', 'LC_PAPER', 'LC_MONETARY', 'TZ', 'LC_ADDRESS', 'LC_MEASUREMENT', 'LC_IDENTIFICATION', 'LC_COLLATE', 'LC_NUMERIC', 'LC_MESSAGES', 'LC_TIME', 'LANGUAGE', 'LC_NAME', 'LOCPATH', 'LC_TELEPHONE']
 ---------------------------------------------------------------------------------------------------- 
-```
-
-### `heaplens-list-env` on `tests/env-in-heap`
-
-```
-gef➤  heaplens-list-env
-
-...
-
-----------------------------------------------------------------------------------------------------
-1st execution. Found following environment variable:
-['ENV_IN_HEAP']
-----------------------------------------------------------------------------------------------------
-
-...
-
-----------------------------------------------------------------------------------------------------
-2nd execution. Possible environment variables for heap grooming:
-['ENV_IN_HEAP']
-----------------------------------------------------------------------------------------------------
 ```
 
 ## 🚨 Known Issues
