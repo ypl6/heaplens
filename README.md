@@ -1,5 +1,8 @@
 # 🔎 Heaplens
 CMPT733 Cybersecurity Lab II Project
+
+![heaplens](heaplens.png)
+
 ## 📂 Repo Structure
 
 ::TODO::
