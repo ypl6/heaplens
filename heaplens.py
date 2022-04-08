@@ -449,7 +449,8 @@ class HeaplensDump(HeaplensCommand):
 
     def parse_args(self, args):
         parser = argparse.ArgumentParser(
-            description="Dump Heaplens logs.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+            description="Dump Heaplens logs. Writes to stdout by default.", 
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument("-o", "--output", type=str,
                             help="write to file at path {output}")
 
@@ -459,27 +460,39 @@ class HeaplensDump(HeaplensCommand):
             return parser.parse_args([])
 
     def invoke(self, arg, from_tty):
-        # Parse arguments
-        args = self.parse_args(arg)
-        print(DIVIDER)
-
+       
         global __heaplens_log__
         global heaplens_details
+        
+        # Parse arguments
+        args = {}
+        try:
+            args = self.parse_args(arg)
+        except RuntimeWarning:
+            pass
 
-        print("Dumping...")
-        if args.output:
-            try:
-                with open(args.output, "w") as fo:
-                    fo.write(json.dumps(heaplens_details))
-            except (IOError, FileNotFoundError):
-                print("Failed to write to a file. Please try again.")
-        else:
-            for i, (j, k) in enumerate(heaplens_details.items()):
-                print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
-                print("Printing trace:\n", k['backtrace'])
-
-        print("Dump complete")
-        print(DIVIDER)
+        try:
+            if args.output:
+                try:
+                    print("Dumping to file...")
+                    with open(args.output, "w") as fo:
+                        fo.write(json.dumps(heaplens_details))
+                    print("Dump complete.")
+                except (IOError, FileNotFoundError):
+                    print("Failed to write to a file. Please try again.")
+            else:
+                print(DIVIDER)
+                print("Dumping...")
+                print(DIVIDER)
+                for i, (j, k) in enumerate(heaplens_details.items()):
+                    print(f"Chunk {i} @ {hex(j)} | size {hex(k['size'])}")
+                    print("Printing trace:\n", k['backtrace'])
+                
+                print("Dump complete.")
+                print(DIVIDER)
+                    
+        except AttributeError:
+            pass
 
 
 # Instantiates the class (register the command)
