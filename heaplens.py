@@ -338,6 +338,26 @@ class Heaplens(HeaplensCommand):
             global __heaplens_log__
             # TODO
             return False
+            
+    class FreeAFunction(gdb.Breakpoint):
+    	"""TODO: add description"""
+    	
+    	global __heaplens__log
+    	global heaplens_details
+    	
+    	def __init__(self, name):
+    	    super(FreeAFunction, self).__init__(name, gdb.BP_BREAKPOINT, internal=False)
+    	    
+    	def stop(self):
+    	    rdi = read_register("rdi")
+    	    
+    	    if rdi in heaplens_details:
+    	    	print(f"Freeing {hex(rdi)}")
+    	    	backtrace()
+    	    	del heaplens_details[rdi]
+    	    
+    	    return False
+    	    
 
     def parse_args(self, args):
         parser = argparse.ArgumentParser(description="Collect heap info from memory (de)allocation functions.",
