@@ -123,9 +123,10 @@ class HeaplensListEnv(HeaplensCommand):
         # Parse arguments
         run_args, args = self.parse_args(arg)
         run_cmd = f"r {run_args}" if run_args else "r"
-        print(DIVIDER)
-        print(f" args: {args}\n run_args: {run_args}")
-        print(DIVIDER)
+        if args and args.verbose:
+            print(DIVIDER)
+            print(f" args: {args}\n run_args: {run_args}")
+            print(DIVIDER)
 
         # Disable gef output
         gdb.execute(f"gef config context.enable False", to_string=True)
