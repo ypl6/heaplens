@@ -41,13 +41,19 @@ def read_register(register):
     return stoi(val)
 
 
-def clear_chunks_log():
+def clear_chunks_log(args):
     global __chunks_log__
+    if args and args.verbose:
+        len_key = len(__chunks_log__['chunks'].keys())
+        print(f"Clearing {len_key} chunk records...")
     __chunks_log__ = {'free': {}, 'chunks': {}}
 
 
-def clear_heaplens_log():
+def clear_heaplens_log(args):
     global __heaplens_log__
+    if args and args.verbose:
+        len_key = len(__heaplens_log__.keys())
+        print(f"Clearing {len_key} backtrace records...")
     __heaplens_log__ = {}
 
 
@@ -64,10 +70,8 @@ def record_updated_chunks():
             __chunks_log__['free'][addr] = {}
     chunks = gdb.execute("heap chunks", to_string=True)
 
-    for chunk in re.split(r'\]+', chunks):
-        if "top chunk" not in chunk:
-            chunk += "]"
-        addr = "".join(re.findall(addr_re, chunk))
+    for chunk in re.split(r'\]$', chunks):
+        addr = "]".join(re.findall(addr_re, chunk))
         if addr in __chunks_log__['free'].keys():
             __chunks_log__['chunks'][addr] = chunk.replace(
                 ")", ")\033[0;34m  ←  free chunk\033[0m")
@@ -265,7 +269,7 @@ class GetRetBreakpoint(gdb.Breakpoint):
 
 
 class Heaplens(HeaplensCommand):
-    """A generic Heaplens command that collect heap info from memory (de)allocation functions."""
+    """A generic Heaplens command that collects heap info from memory (de)allocation functions."""
 
     def __init__(self):
         super().__init__("heaplens", gdb.COMMAND_USER)
@@ -416,7 +420,7 @@ class Heaplens(HeaplensCommand):
                 self.custom_bkps.append(
                     self.GetCustomBreakpoint(name=f"{bkp}"))
 
-        print(f"Hooking free function free...")
+        print(f"Hooking free function...")
         self.mem_bkps.append(
             self.GetFreeBreakpoint(name="free", verbose=args.verbose))
 
@@ -446,17 +450,22 @@ class HeaplensClear(HeaplensCommand):
     def parse_args(self, args):
         parser = argparse.ArgumentParser(
             description="Clear Heaplens logs.")
-        return parser.parse_args(args.strip().split(" "))
+        parser.add_argument("-v", "--verbose", action="store_true",
+                            help="increase output verbosity")
+        if args:
+            return parser.parse_args(args.strip().split(" "))
+        else:
+            return parser.parse_args([])
 
     def invoke(self, arg, from_tty):
-        _ = self.parse_args(arg)
+        args = self.parse_args(arg)
 
         answer = ""
         while answer not in ["Y", "N"]:
             answer = input("Clear Heaplens log [Y/N]? ").upper()
         if answer == "Y":
-            clear_chunks_log()
-            clear_heaplens_log()
+            clear_chunks_log(args)
+            clear_heaplens_log(args)
             print("Heaplens logs cleared")
 
 
@@ -473,10 +482,15 @@ class HeaplensChunks(HeaplensCommand):
     def parse_args(self, args):
         parser = argparse.ArgumentParser(
             description="A modified `heap chunks` with info about free chunks.")
-        return parser.parse_args(args.strip().split(" "))
+        parser.add_argument('--nocolor', action="store_true",
+                            help="disable ANSI color codes")
+        if args:
+            return parser.parse_args(args.strip().split(" "))
+        else:
+            return parser.parse_args([])
 
     def invoke(self, arg, from_tty):
-        _ = self.parse_args(arg)
+        args = self.parse_args(arg)
 
         global __chunks_log__
         record_updated_chunks()
@@ -484,6 +498,8 @@ class HeaplensChunks(HeaplensCommand):
         print("Showing current heap info with freed chunks:")
         try:
             for _, chunk in __chunks_log__['chunks'].items():
+                if args and args.nocolor:
+                    chunk = escape_ansi(chunk)
                 print(chunk, end="")
         except KeyError:
             print("Nothing to print")
