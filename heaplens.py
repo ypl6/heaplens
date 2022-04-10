@@ -38,27 +38,41 @@ def stoi(s):
 
 def read_register(register):
     val = gdb.parse_and_eval("${}".format(register))
-    s_val = stoi(val)
-    return s_val
+    return stoi(val)
 
 
-def record_updated_chunks(log):
-    addr_re = r'.*addr=(.{14})'
+def clear_chunks_log():
+    global __chunks_log__
+    __chunks_log__ = {'free': {}, 'chunks': {}}
+
+
+def clear_heaplens_log():
+    global __heaplens_log__
+    __heaplens_log__ = {}
+
+
+def record_updated_chunks():
+    global __chunks_log__
+    # 64-bit only
+    addr_re = r'\(addr=(.{14})'
     bins = gdb.execute("heap bins", to_string=True)
     for bin in bins.splitlines():
         # Example: Chunk(addr=0x56206612bd30, size=0x12d0, flags=PREV_INUSE)
         # address length is 14
         addr = "".join(re.findall(addr_re, bin))
         if addr:
-            log['free'][addr] = {}
+            __chunks_log__['free'][addr] = {}
     chunks = gdb.execute("heap chunks", to_string=True)
-    for chunk in chunks:
+
+    for chunk in re.split(r'\]+', chunks):
+        if "top chunk" not in chunk:
+            chunk += "]"
         addr = "".join(re.findall(addr_re, chunk))
-        if addr in log['free'].keys():
-            log['chunks'][addr] = chunk + \
-                "\033[0;34m  ←  free chunk\033[0m"
+        if addr in __chunks_log__['free'].keys():
+            __chunks_log__['chunks'][addr] = chunk.replace(
+                ")", ")\033[0;34m  ←  free chunk\033[0m")
         else:
-            log['chunks'][addr] = chunk
+            __chunks_log__['chunks'][addr] = chunk
 
 
 # ========================================== HEAPLENS
@@ -273,8 +287,7 @@ class Heaplens(HeaplensCommand):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
 
         def stop(self):
-            global __chunks_log__
-            record_updated_chunks(__chunks_log__)
+            record_updated_chunks()
             return True
 
     class GetAllocBreakpoint(gdb.Breakpoint):
@@ -358,8 +371,6 @@ class Heaplens(HeaplensCommand):
     def parse_args(self, args):
         parser = argparse.ArgumentParser(description="Collect heap info from memory (de)allocation functions.",
                                          formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        # parser.add_argument("-v", "--verbose", action="store_true",
-        #                     help="increase output verbosity")
         parser.add_argument("-b", "--breakpoint", type=str, action="append",
                             help="stop the executions here (execute br {breakpoint} in gdb)")
         parser.add_argument("-v", "--verbose", action="store_true",
@@ -433,13 +444,12 @@ class HeaplensClear(HeaplensCommand):
         super().__init__("heaplens-clear", gdb.COMMAND_USER)
 
     def invoke(self, arg, from_tty):
-        global __heaplens_log__, __chunks_log__
         answer = ""
         while answer not in ["Y", "N"]:
             answer = input("Clear Heaplens log [Y/N]? ").upper()
         if answer == "Y":
-            __chunks_log__ = {'free': {}, 'chunks': {}}
-            __heaplens_log__ = {}
+            clear_chunks_log()
+            clear_heaplens_log()
             print("Heaplens logs cleared")
 
 
@@ -455,7 +465,7 @@ class HeaplensChunks(HeaplensCommand):
 
     def invoke(self, arg, from_tty):
         global __chunks_log__
-        record_updated_chunks(__chunks_log__)
+        record_updated_chunks()
 
         print("Showing current heap info with freed chunks:")
         try:
@@ -518,7 +528,7 @@ class HeaplensDump(HeaplensCommand):
         except RuntimeWarning:
             pass
 
-        if arg and args.output:
+        if args and args.output:
             print("Dumping to file...")
             try:
                 with open(args.output, "w") as fo:
@@ -529,7 +539,7 @@ class HeaplensDump(HeaplensCommand):
             except (IOError, FileNotFoundError):
                 print("Failed to write to a file. Please try again.")
             print("Dump complete.")
-        else:
+        elif args:
             print(DIVIDER)
             print("Dumping...")
             print(DIVIDER)
@@ -544,12 +554,12 @@ HeaplensDump()
 
 # Debug: auto run command on gdb startup
 cmds = [
-    # "file sudoedit",
+    "file sudoedit",
     # "heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
 
     # "file tests/env-in-heap",
     # "heaplens-list-env -b breakme",
-    # "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
+    "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     # "heaplens -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     # "q",
 ]
