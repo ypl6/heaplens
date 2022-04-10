@@ -114,9 +114,9 @@ Example output:
 ```shell
 gef➤  file sudoedit
 gef➤  heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print("A"*65535)')
-----------------------------------------------------------------------------------------------------
+----------------------------
 Initializing Heaplens
-----------------------------------------------------------------------------------------------------
+----------------------------
 Temporary breakpoint 1 at 0x5840: file ../../src/src/sudo.c, line 136.
 [Thread debugging using libthread_db enabled]
 Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
@@ -144,6 +144,7 @@ Removing breakpoints from mem_bkps...
 
 ### `heaplens-dump`
 
+Dumps Heaplens logs. We provide options to write the results to a file, output using the JSON format, and sort the chunks by their addresses. In the dump, each chunk would have its address, size, backtrace and related memory allocation function recorded in a more readable way. 
 
 ```shell
 heaplens-dump -h
@@ -163,9 +164,9 @@ Example output:
 
 ```shell
 gef➤  heaplens-dump
-----------------------------------------------------------------------------------------------------
+----------------------------
 Dumping...
-----------------------------------------------------------------------------------------------------
+----------------------------
 
 ...
 
@@ -181,7 +182,6 @@ Trace:
 ...
 
 Dump complete.
-----------------------------------------------------------------------------------------------------
 ```
 
 ### `heaplens-list-env`
@@ -222,7 +222,9 @@ gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAA
 ```
 
 ### `heaplens-chunks`
-Outputs a slightly modified version of `heap chunks` from `gef`, that integrates info from `heap bins` about free chunks.
+Outputs a slightly modified version of `heap chunks` from `gef`.
+
+This extends GEF’s `heap chunks` (which shows chunks’ addresses,  flags, sizes and metadata) by integrating information about free chunks from `heap bins` (which lists formerly allocated and freed chunks from glibc bins). GEF provides features that help heap inspection like the two we mentioned, but it is tedious to combine the two. On a high level, this command collects addresses of free chunks from the latter, and labels them in the former’s result.
 
 ```shell
 heaplens-chunks -h
@@ -241,6 +243,25 @@ Example output:
 gef➤  heaplens-chunks
 Showing current heap info with freed chunks:
 
+...
+
+Chunk(addr=0x55dd7f91ddb0, size=0xed0, flags=PREV_INUSE)  ←  free chunk
+    [0x000055dd7f91ddb0     e0 fb ba e1 f8 7f 00 00 e0 fb ba e1 f8 7f 00 00    ...............]
+Chunk(addr=0x55dd7f91ec80, size=0x50, flags=! PREV_INUSE)
+    [0x000055dd7f91ec80     2f 75 73 72 2f 6c 6f 63 61 6c 2f 73 62 69 6e 3a    /usr/local/sbin]
+Chunk(addr=0x55dd7f91ecd0, size=0x4010, flags=PREV_INUSE)  ←  free chunk
+    [0x000055dd7f91ecd0     f0 02 bb e1 f8 7f 00 00 f0 02 bb e1 f8 7f 00 00    ...............]
+Chunk(addr=0x55dd7f922ce0, size=0x50, flags=! PREV_INUSE)
+    [0x000055dd7f922ce0     90 02 91 7f dd 55 00 00 00 00 00 00 00 00 00 00    .....U.........]
+Chunk(addr=0x55dd7f922d30, size=0x2da0, flags=PREV_INUSE)  ←  free chunk
+    [0x000055dd7f922d30     d0 02 bb e1 f8 7f 00 00 d0 02 bb e1 f8 7f 00 00    ...............]
+Chunk(addr=0x55dd7f925ad0, size=0x110, flags=! PREV_INUSE)  ←  free chunk
+    [0x000055dd7f925ad0     00 00 00 00 00 00 00 00 10 f0 90 7f dd 55 00 00    .............U.]
+Chunk(addr=0x55dd7f925be0, size=0x30, flags=PREV_INUSE)
+    [0x000055dd7f925be0     00 00 00 00 00 00 00 00 d2 78 b7 7e dd 55 00 00    .........x.~.U.]
+Chunk(addr=0x55dd7f925c10, size=0x20, flags=PREV_INUSE)
+    [0x000055dd7f925c10     65 6e 5f 55 53 2e 55 54 46 2d 38 00 00 00 00 00    en_US.UTF-8....]
+Chunk(addr=0x55dd7f925c30, size=0xa3e0, flags=PREV_INUSE)  ←  top chunk
 ```
 
 ### `heaplens-clear`
@@ -297,10 +318,10 @@ gef➤  heaplens-list-env
 
 ...
 
-----------------------------------------------------------------------------------------------------
+----------------------------
 2nd execution. Possible environment variables for heap grooming:
 ['ENV_IN_HEAP']
-----------------------------------------------------------------------------------------------------
+----------------------------
 ```
 
 ### List envirnoment variables for heap grooming in `sudoedit`
@@ -311,17 +332,17 @@ gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAA
 
 ...
 
-----------------------------------------------------------------------------------------------------
+----------------------------
 1st execution. Found following environment variable:
 ['LOCPATH', 'LC_ALL', 'LC_IDENTIFICATION', 'LANG', 'LC_MEASUREMENT', 'LC_TELEPHONE', 'LC_ADDRESS', 'LC_NAME', 'LC_PAPER', 'LC_MESSAGES', 'LC_MONETARY', 'LC_COLLATE', 'LC_TIME', 'LC_NUMERIC', 'LC_CTYPE', 'TZ', 'SHELL', 'LANGUAGE']    
-----------------------------------------------------------------------------------------------------
+----------------------------
 
 ...
 
-----------------------------------------------------------------------------------------------------
+----------------------------
 2nd execution. Possible environment variables for heap grooming:
 ['LC_CTYPE', 'LC_PAPER', 'LC_MONETARY', 'TZ', 'LC_ADDRESS', 'LC_MEASUREMENT', 'LC_IDENTIFICATION', 'LC_COLLATE', 'LC_NUMERIC', 'LC_MESSAGES', 'LC_TIME', 'LANGUAGE', 'LC_NAME', 'LOCPATH', 'LC_TELEPHONE']
----------------------------------------------------------------------------------------------------- 
+---------------------------- 
 ```
 
 ## 🚨 Known Issues

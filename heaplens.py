@@ -69,12 +69,12 @@ def record_updated_chunks():
         if addr:
             __chunks_log__['free'][addr] = {}
     chunks = gdb.execute("heap chunks", to_string=True)
-
-    for chunk in re.split(r'\]$', chunks):
-        addr = "]".join(re.findall(addr_re, chunk))
+    # look ahead regex to keep delimiter
+    for chunk in re.split(r'.(?=\])', chunks):
+        addr = "".join(re.findall(addr_re, chunk))
         if addr in __chunks_log__['free'].keys():
-            __chunks_log__['chunks'][addr] = chunk.replace(
-                ")", ")\033[0;34m  ←  free chunk\033[0m")
+            __chunks_log__['chunks'][addr] = re.sub(
+                "\)\n", ")\033[0;34m  ←  free chunk\033[0m\n", chunk)
         else:
             __chunks_log__['chunks'][addr] = chunk
 
