@@ -56,21 +56,11 @@ cyberlab@ubuntu:~$ sudoedit -s /
 sudoedit: /: not a regular file # sudo is vulnerable
 ```
 
-## 💡 Usage
-
-**TODO**: copy high-level descriptions here
-
-- `heaplens`
-- `heaplens-dump`
-- `heaplens-list-env`
-- `heaplens-chunks`
-- `heaplens-clear`
-
-As of now, help menus are provided for commands `heaplens`, `heaplens-dump` and `heaplens-list-env`. Access them via `<command> -h` in GDB.
-
 ## 📝 Loading the Plugin
+
+This has been done in the VM. In case the configuration is erroneous, you can follow the instructions here to load Heaplens.
 #### Option 1
-Start gef
+Start `gef` and edit config:
 ```
 gef➤ gef config gef.extra_plugins_dir <path to>/heaplens
 gef➤ gef save
@@ -79,10 +69,106 @@ gef➤ q
 
 This should update the file `~/.gef.rc` or `/root/.gef.rc` (under root).
 #### Option 2
-Add this in `.gdbinit`:
+Add this line in `~/.gdbinit` or `/root/.gdbinit`:
 ```
 source <path to>/heaplens/heaplens.py
 ```
+
+## 💡 Usage
+
+It is suggested to run `gdb` under root privileges:
+
+```shell
+$ sudo su
+# gdb
+```
+
+Help messages are provided for all commands. You can access them via `<command> -h` in GDB.
+
+### `heaplens`
+::TODO::
+
+
+```shell
+heaplens -h
+usage: [-h] [-b BREAKPOINT] [-v]
+
+Collect heap info from memory (de)allocation functions.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BREAKPOINT, --breakpoint BREAKPOINT
+                        stop the executions here (execute br {breakpoint} in gdb) (default: None)
+  -v, --verbose         increase output verbosity (default: False)
+```
+
+### `heaplens-dump`
+
+
+```shell
+heaplens-dump -h
+usage: [-h] [-o OUTPUT] [--json] [-s]
+
+Dump Heaplens logs. Writes to stdout by default.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+                        write to file at path {output} (default: None)
+  --json                dump in json (default: False)
+  -s, --sort            sort the chunks by their addresses (default: False)
+```
+
+### `heaplens-list-env`
+List environment variables that are stored and freed in the heap. It is particularly useful when you want to perform heap grooming as these variables might affect the heap layout.
+
+```shell
+heaplens-list-env -h
+usage: [-h] [-v] [--prefix PREFIX] [--suffix SUFFIX] [-b BREAKPOINT] [-s SKIP]
+
+List environment variables that might affect the heap layout.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         increase output verbosity
+  --prefix PREFIX       environment variable value prefix
+  --suffix SUFFIX       environment variable value suffix
+  -b BREAKPOINT, --breakpoint BREAKPOINT
+                        stop the executions here (execute br {breakpoint} in gdb)
+  -s SKIP, --skip SKIP  skip this environment variable
+```
+
+### `heaplens-chunks`
+Outputs a slightly modified version of `heap chunks` from `gef`, that integrates info from `heap bins` about free chunks.
+
+```shell
+heaplens-chunks -h
+usage: [-h] [--nocolor]
+
+A modified `heap chunks` with info about free chunks.
+
+optional arguments:
+  -h, --help  show this help message and exit
+  --nocolor   disable ANSI color codes
+```
+
+### `heaplens-clear`
+Clear all internal logs / data collected and used by `heaplens`.
+
+```shell
+heaplens-clear -h
+usage: [-h] [-v]
+
+Clear Heaplens logs.
+
+optional arguments:
+  -h, --help     show this help message and exit
+  -v, --verbose  increase output verbosity
+```
+
+
+
+
 
 ## 🛠 Test Cases
 
@@ -98,7 +184,7 @@ $ make all
 ```
 gef➤  file tests/heap-dump
 gef➤  heaplens -b breakme
-gef➤  heaplens-dump
+gef➤  heaplens-dumps
 ```
 
 ### Dump `sudoedit` heap layout to output.txt
@@ -106,7 +192,7 @@ gef➤  heaplens-dump
 ```
 gef➤  file sudoedit
 gef➤  heaplens -b set_cmnd -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-gef➤  heaplens-dump output.txt
+gef➤  heaplens-dumps output.txt
 ```
 
 output.txt
@@ -153,3 +239,4 @@ gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAA
 
 ## 🚨 Known Issues
 
+Please refer to the [Issues](https://github.com/ypl6/heaplens/issues) page for more details.
