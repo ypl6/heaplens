@@ -584,12 +584,12 @@ HeaplensDump()
 
 # Debug: auto run command on gdb startup
 cmds = [
-    "file sudoedit",
+    # "file sudoedit",
     # "heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s '\\' AAAAAAAAAAAAAAAAAAAAAAAAAAA",
 
     # "file tests/env-in-heap",
     # "heaplens-list-env -b breakme",
-    "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
+    # "heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     # "heaplens -- -s '\\' $(python3 -c 'print(\"A\"*65535)')",
     # "q",
 ]
