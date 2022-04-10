@@ -443,7 +443,14 @@ class HeaplensClear(HeaplensCommand):
     def __init__(self):
         super().__init__("heaplens-clear", gdb.COMMAND_USER)
 
+    def parse_args(self, args):
+        parser = argparse.ArgumentParser(
+            description="Clear Heaplens logs.")
+        return parser.parse_args(args.strip().split(" "))
+
     def invoke(self, arg, from_tty):
+        _ = self.parse_args(arg)
+
         answer = ""
         while answer not in ["Y", "N"]:
             answer = input("Clear Heaplens log [Y/N]? ").upper()
@@ -463,14 +470,21 @@ class HeaplensChunks(HeaplensCommand):
     def __init__(self):
         super().__init__("heaplens-chunks", gdb.COMMAND_USER)
 
+    def parse_args(self, args):
+        parser = argparse.ArgumentParser(
+            description="A modified `heap chunks` with info about free chunks.")
+        return parser.parse_args(args.strip().split(" "))
+
     def invoke(self, arg, from_tty):
+        _ = self.parse_args(arg)
+
         global __chunks_log__
         record_updated_chunks()
 
         print("Showing current heap info with freed chunks:")
         try:
             for _, chunk in __chunks_log__['chunks'].items():
-                print(chunk)
+                print(chunk, end="")
         except KeyError:
             print("Nothing to print")
 
