@@ -503,11 +503,11 @@ class HeaplensDump(HeaplensCommand):
         global __chunks_log__
         global __heaplens_log__
         merged = {**__chunks_log__['free'], **__heaplens_log__}
+        mlist = list(merged.items())
         content = ""
         if args.sort:
-            merged = list(merged.items())
-            merged.sort(key=lambda x: x[0])
-        for i, (addr, info) in enumerate(merged):
+            mlist.sort(key=lambda x: x[0])
+        for i, (addr, info) in enumerate(mlist):
             if not info:
                 break
             size = hex(info['size']) if info['size'] else "-"
