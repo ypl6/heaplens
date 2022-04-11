@@ -291,7 +291,6 @@ class Heaplens(HeaplensCommand):
             super().__init__(name, gdb.BP_BREAKPOINT, internal=False)
 
         def stop(self):
-            record_updated_chunks()
             return True
 
     class GetAllocBreakpoint(gdb.Breakpoint):
