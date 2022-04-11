@@ -93,8 +93,7 @@ The high-level idea is that by hooking these functions, we can automate the proc
 
 It also supports adding custom breakpoints in between if the user is interested in an intermediate heap layout. 
 
-The command itself is not very verbose and you will need to use heaplens-dump to print the results.
-
+The command itself is not very verbose and you will need to use `heaplens-dump` to print the results.
 
 ```shell
 heaplens -h
@@ -292,7 +291,7 @@ $ make all
 ```
 gef➤  file tests/heap-dump
 gef➤  heaplens -b breakme
-gef➤  heaplens-dumps
+gef➤  heaplens-dump
 ```
 
 ### Dump `sudoedit` heap layout to output.txt
@@ -300,7 +299,7 @@ gef➤  heaplens-dumps
 ```
 gef➤  file sudoedit
 gef➤  heaplens -b set_cmnd -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-gef➤  heaplens-dumps output.txt
+gef➤  heaplens-dump -o output.txt
 ```
 
 output.txt
@@ -308,7 +307,6 @@ output.txt
 ```
 [heap dump]
 ```
-
 
 ### List envirnoment variables for heap grooming in `tests/env-in-heap`
 
