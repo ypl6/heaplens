@@ -26,7 +26,7 @@ CMPT733 Cybersecurity Lab II Project
 
 ## 📦 Environment
 
-Here is a list of things (and versions) we used to test the exploit. **They should already be installed in the VM.** In case anything is missing, follow the instruction below.
+Here is a list of things (and versions) we used to test the exploit. They should already be installed in the VM. In case anything is missing, follow the instruction below.
 
 ### Dependencies
 
@@ -38,7 +38,7 @@ Here is a list of things (and versions) we used to test the exploit. **They shou
   - If `gef` is not enabled under root, take a look at `/root/.gdbinit`
   - If the file is empty, just copy what you have in `~/.gdbinit`
 
-### `sudo` Dependencies (for running heaplens on `sudo`)
+### `sudo` dependencies (for running `heaplens` on `sudo`)
 
 A binary of `sudo` with debugging enabled is required. A pre-built binary with debug symbols has been installed in the VM.
 
@@ -59,6 +59,7 @@ sudoedit: /: not a regular file # sudo is vulnerable
 ## 📝 Loading the Plugin
 
 This has been done in the VM. In case the configuration is erroneous, you can follow the instructions here to load Heaplens.
+
 #### Option 1
 Start `gef` and edit config:
 ```
@@ -68,6 +69,7 @@ gef➤ q
 ```
 
 This should update the file `~/.gef.rc` or `/root/.gef.rc` (under root).
+
 #### Option 2
 Add this line in `~/.gdbinit` or `/root/.gdbinit`:
 ```
@@ -76,7 +78,7 @@ source <path to>/heaplens/heaplens.py
 
 ## 💡 Usage
 
-It is suggested to run `gdb` under root privileges:
+It is suggested to run `gdb` under root when debugging privileged programs:
 
 ```shell
 $ sudo su
@@ -95,7 +97,7 @@ It also supports adding custom breakpoints in between if the user is interested 
 
 The command itself is not very verbose and you will need to use `heaplens-dump` to print the results.
 
-```shell
+```
 heaplens -h
 usage: [-h] [-b BREAKPOINT] [-v]
 
@@ -110,7 +112,7 @@ optional arguments:
 
 Example output:
 
-```shell
+```
 gef➤  file sudoedit
 gef➤  heaplens -b set_cmnd -- -s '\\' $(python3 -c 'print("A"*65535)')
 ----------------------------
@@ -145,7 +147,7 @@ Removing breakpoints from mem_bkps...
 
 Dumps Heaplens logs. We provide options to write the results to a file, output using the JSON format, and sort the chunks by their addresses. In the dump, each chunk would have its address, size, backtrace and related memory allocation function recorded in a more readable way. 
 
-```shell
+```
 heaplens-dump -h
 usage: [-h] [-o OUTPUT] [--json] [-s]
 
@@ -161,7 +163,7 @@ optional arguments:
 
 Example output:
 
-```shell
+```
 gef➤  heaplens-dump
 ----------------------------
 Dumping...
@@ -186,7 +188,7 @@ Dump complete.
 ### `heaplens-list-env`
 List environment variables that are stored and freed in the heap. It is particularly useful when you want to perform heap grooming as these variables might affect the heap layout.
 
-```shell
+```
 heaplens-list-env -h
 usage: [-h] [-v] [--prefix PREFIX] [--suffix SUFFIX] [-b BREAKPOINT] [-s SKIP]
 
@@ -204,7 +206,7 @@ optional arguments:
 
 Example output:
 
-```shell
+```
 gef➤  file sudoedit
 Reading symbols from sudoedit...
 gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -225,7 +227,7 @@ Outputs a slightly modified version of `heap chunks` from `gef`.
 
 This extends GEF’s `heap chunks` (which shows chunks’ addresses,  flags, sizes and metadata) by integrating information about free chunks from `heap bins` (which lists formerly allocated and freed chunks from glibc bins). GEF provides features that help heap inspection like the two we mentioned, but it is tedious to combine the two. On a high level, this command collects addresses of free chunks from the latter, and labels them in the former’s result.
 
-```shell
+```
 heaplens-chunks -h
 usage: [-h] [--nocolor]
 
@@ -238,7 +240,7 @@ optional arguments:
 
 Example output:
 
-```shell
+```
 gef➤  heaplens-chunks
 Showing current heap info with freed chunks:
 
@@ -266,7 +268,7 @@ Chunk(addr=0x55dd7f925c30, size=0xa3e0, flags=PREV_INUSE)  ←  top chunk
 ### `heaplens-clear`
 Clear all internal logs / data collected and used by `heaplens`.
 
-```shell
+```
 heaplens-clear -h
 usage: [-h] [-v]
 
@@ -308,7 +310,7 @@ output.txt
 [heap dump]
 ```
 
-### List envirnoment variables for heap grooming in `tests/env-in-heap`
+### List environment variables for heap grooming in `tests/env-in-heap`
 
 ```
 gef➤  file tests/env-in-heap
@@ -322,7 +324,7 @@ gef➤  heaplens-list-env
 ----------------------------
 ```
 
-### List envirnoment variables for heap grooming in `sudoedit`
+### List environment variables for heap grooming in `sudoedit`
 
 ```
 gef➤  file sudoedit
