@@ -185,43 +185,6 @@ Trace:
 Dump complete.
 ```
 
-### `heaplens-list-env`
-List environment variables that are stored and freed in the heap. It is particularly useful when you want to perform heap grooming as these variables might affect the heap layout.
-
-```
-heaplens-list-env -h
-usage: [-h] [-v] [--prefix PREFIX] [--suffix SUFFIX] [-b BREAKPOINT] [-s SKIP]
-
-List environment variables that might affect the heap layout.
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -v, --verbose         increase output verbosity
-  --prefix PREFIX       environment variable value prefix
-  --suffix SUFFIX       environment variable value suffix
-  -b BREAKPOINT, --breakpoint BREAKPOINT
-                        stop the executions here (execute br {breakpoint} in gdb)
-  -s SKIP, --skip SKIP  skip this environment variable
-```
-
-Example output:
-
-```
-gef➤  file sudoedit
-Reading symbols from sudoedit...
-gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
-...
-
-1st execution. Found following environment variable:
-['LOCPATH', 'LC_ALL', 'LC_IDENTIFICATION', 'LANG', 'LC_MEASUREMENT', 'LC_TELEPHONE', 'LC_ADDRESS', 'LC_NAME', 'LC_PAPER', 'LC_MESSAGES', 'LC_MONETARY', 'LC_COLLATE', 'LC_TIME', 'LC_NUMERIC', 'LC_CTYPE', 'TZ', 'SHELL', 'LANGUAGE']
-  
-...
-
-2nd execution. Possible environment variables for heap grooming:
-['LC_IDENTIFICATION', 'LC_COLLATE', 'TZ', 'LC_TIME', 'LANGUAGE', 'LC_NAME', 'LOCPATH', 'LC_MESSAGES', 'LC_NUMERIC', 'LC_ADDRESS', 'LC_TELEPHONE', 'LC_MONETARY', 'LC_MEASUREMENT', 'LC_CTYPE', 'LC_PAPER']
-```
-
 ### `heaplens-chunks`
 Outputs a slightly modified version of `heap chunks` from `gef`.
 
@@ -277,6 +240,43 @@ Clear Heaplens logs.
 optional arguments:
   -h, --help     show this help message and exit
   -v, --verbose  increase output verbosity
+```
+
+### `heaplens-list-env`
+List environment variables that are stored and freed in the heap. It is particularly useful when you want to perform heap grooming as these variables might affect the heap layout.
+
+```
+heaplens-list-env -h
+usage: [-h] [-v] [--prefix PREFIX] [--suffix SUFFIX] [-b BREAKPOINT] [-s SKIP]
+
+List environment variables that might affect the heap layout.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --verbose         increase output verbosity
+  --prefix PREFIX       environment variable value prefix
+  --suffix SUFFIX       environment variable value suffix
+  -b BREAKPOINT, --breakpoint BREAKPOINT
+                        stop the executions here (execute br {breakpoint} in gdb)
+  -s SKIP, --skip SKIP  skip this environment variable
+```
+
+Example output:
+
+```
+gef➤  file sudoedit
+Reading symbols from sudoedit...
+gef➤  heaplens-list-env -s LC_ALL -b set_cmnd --prefix C.UTF-8@ -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+...
+
+1st execution. Found following environment variable:
+['LOCPATH', 'LC_ALL', 'LC_IDENTIFICATION', 'LANG', 'LC_MEASUREMENT', 'LC_TELEPHONE', 'LC_ADDRESS', 'LC_NAME', 'LC_PAPER', 'LC_MESSAGES', 'LC_MONETARY', 'LC_COLLATE', 'LC_TIME', 'LC_NUMERIC', 'LC_CTYPE', 'TZ', 'SHELL', 'LANGUAGE']
+  
+...
+
+2nd execution. Possible environment variables for heap grooming:
+['LC_IDENTIFICATION', 'LC_COLLATE', 'TZ', 'LC_TIME', 'LANGUAGE', 'LC_NAME', 'LOCPATH', 'LC_MESSAGES', 'LC_NUMERIC', 'LC_ADDRESS', 'LC_TELEPHONE', 'LC_MONETARY', 'LC_MEASUREMENT', 'LC_CTYPE', 'LC_PAPER']
 ```
 
 ## 🛠 Test Cases
