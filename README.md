@@ -304,12 +304,6 @@ gef➤  heaplens -b set_cmnd -- -s \\ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 gef➤  heaplens-dump -o output.txt
 ```
 
-output.txt
-
-```
-[heap dump]
-```
-
 ### List environment variables for heap grooming in `tests/env-in-heap`
 
 ```
